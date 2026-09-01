@@ -33,273 +33,8 @@
       },
     };
   </script>
-  <style>
-    :root {
-      --navy: #0f172a;
-      --crimson: #991b1b;
-      --electron: #0284c7;
-    }
+  <link rel="stylesheet" href="css/app.css" />
 
-    html, body {
-      background-color: var(--navy);
-    }
-
-    body {
-      min-height: 100vh;
-      color: #e2e8f0;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(2, 132, 199, 0.16), transparent 55%),
-        radial-gradient(ellipse 70% 45% at 95% 110%, rgba(153, 27, 27, 0.18), transparent 50%),
-        linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
-      background-size: auto, auto, 52px 52px, 52px 52px;
-    }
-
-    .glass {
-      background: rgba(15, 23, 42, 0.62);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(125, 211, 252, 0.16);
-    }
-
-    .glass-card {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.55) 0%, rgba(15, 23, 42, 0.72) 100%);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(2, 132, 199, 0.22);
-      transition: border-color 280ms ease, box-shadow 280ms ease, transform 280ms ease;
-    }
-
-    .glass-card:hover {
-      border-color: rgba(56, 189, 248, 0.55);
-      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.18), 0 18px 50px rgba(2, 132, 199, 0.12);
-      transform: translateY(-4px);
-    }
-
-    .badge {
-      letter-spacing: 0.04em;
-    }
-
-    .launch-btn {
-      background: linear-gradient(90deg, #0369a1 0%, #0284c7 55%, #38bdf8 140%);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25), 0 8px 24px rgba(2, 132, 199, 0.28);
-      transition: box-shadow 250ms ease, transform 250ms ease, filter 250ms ease;
-    }
-
-    .launch-btn:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.45), 0 0 28px rgba(2, 132, 199, 0.55);
-      transform: translateY(-1px);
-    }
-
-    .back-btn {
-      transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
-    }
-
-    .back-btn:hover {
-      border-color: rgba(56, 189, 248, 0.55);
-      box-shadow: 0 0 22px rgba(2, 132, 199, 0.25);
-      background: rgba(2, 132, 199, 0.12);
-    }
-
-    .chevron {
-      transition: transform 280ms ease;
-    }
-
-    .accordion-open .chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion-body {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 380ms ease;
-    }
-
-    .accordion-open .accordion-body {
-      grid-template-rows: 1fr;
-    }
-
-    .accordion-body > .inner {
-      overflow: hidden;
-    }
-
-    input[type='range'] {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #7f1d1d, #0284c7);
-      outline: none;
-    }
-
-    input[type='range']::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #f8fafc;
-      border: 2px solid #38bdf8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-      cursor: pointer;
-    }
-
-    input[type='range']::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #f8fafc;
-      border: 2px solid #38bdf8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-      cursor: pointer;
-    }
-
-    select, .field {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    select:focus, .field:focus {
-      outline: none;
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
-    }
-
-    .eq {
-      font-family: 'IBM Plex Serif', Georgia, serif;
-    }
-
-    .fade-view {
-      animation: fadeUp 420ms ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .wm-letter {
-      display: inline;
-      animation: letterIn 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    @keyframes letterIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    #wordmark {
-      display: inline-block;
-      animation: fadeUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    .wordmark-shimmer {
-      background: linear-gradient(
-        105deg,
-        #f8fafc 0%,
-        #7dd3fc 28%,
-        #ffffff 50%,
-        #fda4af 72%,
-        #f8fafc 100%
-      );
-      background-size: 220% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: shimmer 9s ease-in-out 1.1s infinite;
-    }
-
-    @keyframes shimmer {
-      0%, 18% { background-position: 100% 50%; }
-      50% { background-position: 0% 50%; }
-      82%, 100% { background-position: 100% 50%; }
-    }
-
-    .schema-card {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(2, 132, 199, 0.06) 48%, rgba(153, 27, 27, 0.08) 100%);
-    }
-
-    .e-float { animation: eDrift 7s ease-in-out infinite; }
-    .h-float { animation: hDrift 8.5s ease-in-out infinite; }
-
-    @keyframes eDrift {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(118px, 6px); }
-    }
-
-    @keyframes hDrift {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-110px, -5px); }
-    }
-
-    .schema-gap-pulse {
-      animation: gapPulse 3.6s ease-in-out infinite;
-    }
-
-    @keyframes gapPulse {
-      0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.7; }
-    }
-
-    .takeaway {
-      margin-top: 1.75rem;
-      padding: 1rem 0 0;
-      border-top: 1px solid rgba(148, 163, 184, 0.14);
-      max-width: 40rem;
-      font-family: 'IBM Plex Serif', Georgia, serif;
-      font-style: italic;
-      font-size: 0.98rem;
-      line-height: 1.65;
-      color: #94a3b8;
-    }
-
-    .step-card {
-      animation: fadeUp 480ms ease both;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .wm-letter, .wordmark-shimmer, .e-float, .h-float, .schema-gap-pulse, .step-card, .fade-view {
-        animation: none !important;
-        color: inherit;
-        background: none;
-        -webkit-background-clip: unset;
-        background-clip: unset;
-        filter: none;
-        transform: none;
-      }
-      .wordmark-shimmer { color: #f8fafc; }
-    }
-
-    .js-plot {
-      width: 100%;
-      min-height: 380px;
-    }
-
-    .plot-3d {
-      min-height: 520px;
-    }
-
-    .status-ok {
-      border-color: rgba(34, 197, 94, 0.45);
-      background: rgba(22, 163, 74, 0.12);
-      color: #86efac;
-    }
-
-    .status-warn {
-      border-color: rgba(251, 191, 36, 0.45);
-      background: rgba(217, 119, 6, 0.12);
-      color: #fde68a;
-    }
-
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 999px;
-      border: 2px solid #0f172a;
-    }
-  </style>
 </head>
 <body class="font-sans antialiased">
   <div class="pointer-events-none fixed inset-0 overflow-hidden">
@@ -361,8 +96,17 @@
   <div class="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
     <!-- CATALOG -->
     <section id="catalog-view">
+      <article class="glass-card mb-5 flex flex-col rounded-2xl p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200/90">Start here · live lab</p>
+          <h2 class="mt-1 text-2xl font-semibold text-white">ESE 2180 Core Concepts Lab</h2>
+          <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">Five linked tabs. Change temperature or bandgap once — Fermi occupation, carrier type, and the diode Q-point all move. This is for tinkering, not for answers.</p>
+        </div>
+        <button type="button" class="launch-btn mt-4 shrink-0 cursor-pointer rounded-xl px-5 py-3 text-sm font-semibold text-white sm:mt-0" data-launch="lab">Open the Lab</button>
+      </article>
+
       <article id="topic-1" class="glass accordion-open overflow-hidden rounded-2xl">
-          <button type="button" id="accordion-toggle" class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-5 text-left sm:px-7" aria-expanded="true">
+          <button type="button" data-accordion class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-5 text-left sm:px-7" aria-expanded="true">
           <div>
             <p class="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300/80">Module</p>
             <h2 class="mt-1 text-xl font-semibold text-white sm:text-2xl">Topic 1: Semiconductor Crystal &amp; Electronic Fundamentals</h2>
@@ -438,6 +182,66 @@
           </div>
         </div>
       </article>
+
+      <article id="topic-2" class="glass accordion-open mt-5 overflow-hidden rounded-2xl">
+        <button type="button" data-accordion class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-5 text-left sm:px-7" aria-expanded="true">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-red-300/80">Module</p>
+            <h2 class="mt-1 text-xl font-semibold text-white sm:text-2xl">Topic 2: Optoelectronics &amp; LED Emission</h2>
+            <p class="mt-1 text-sm text-slate-400">Bandgap · photon wavelength · visible color · forward voltage</p>
+          </div>
+          <span class="chevron grid h-11 w-11 shrink-0 place-items-center rounded-full border border-red-400/20 bg-red-400/5 text-red-200">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
+        </button>
+        <div class="accordion-body">
+          <div class="inner">
+            <div class="grid grid-cols-1 gap-5 px-5 pb-7 sm:px-7 md:grid-cols-2 xl:grid-cols-3">
+              <article class="glass-card flex flex-col rounded-2xl p-5">
+                <div class="mb-4 flex items-start justify-between gap-3">
+                  <div class="grid h-12 w-12 place-items-center rounded-xl bg-amber-400/15 text-amber-200">
+                    <i class="fa-solid fa-lightbulb text-xl"></i>
+                  </div>
+                  <span class="badge rounded-full border border-amber-300/25 bg-amber-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase text-amber-100">Photonics</span>
+                </div>
+                <h3 class="text-lg font-semibold text-white">Bandgap → LED Color</h3>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-400">Watch an electron recombine across E<sub>g</sub>, emit a photon, and paint the LED. Larger gap, shorter wavelength, bluer light — and a larger approximate V<sub>F</sub>.</p>
+                <button type="button" class="launch-btn mt-5 w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white" data-launch="led">Launch Simulation</button>
+              </article>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article id="topic-3" class="glass accordion-open mt-5 overflow-hidden rounded-2xl">
+        <button type="button" data-accordion class="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-5 text-left sm:px-7" aria-expanded="true">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200/80">Module</p>
+            <h2 class="mt-1 text-xl font-semibold text-white sm:text-2xl">Topic 3: From Junction to Circuit</h2>
+            <p class="mt-1 text-sm text-slate-400">Doping · depletion · Shockley I–V · load line · Q-point</p>
+          </div>
+          <span class="chevron grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-300/20 bg-amber-400/5 text-amber-100">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
+        </button>
+        <div class="accordion-body">
+          <div class="inner">
+            <div class="grid grid-cols-1 gap-5 px-5 pb-7 sm:px-7 md:grid-cols-2 xl:grid-cols-3">
+              <article class="glass-card flex flex-col rounded-2xl p-5">
+                <div class="mb-4 flex items-start justify-between gap-3">
+                  <div class="grid h-12 w-12 place-items-center rounded-xl bg-amber-400/15 text-amber-200">
+                    <i class="fa-solid fa-diagram-project text-xl"></i>
+                  </div>
+                  <span class="badge rounded-full border border-amber-300/25 bg-amber-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase text-amber-100">Devices</span>
+                </div>
+                <h3 class="text-lg font-semibold text-white">PN Junction → Diode Q-Point</h3>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-400">Watch doping become a barrier, the barrier become an I–V curve, and the curve meet a resistor load line. That intersection is the only legal operating point.</p>
+                <button type="button" class="launch-btn mt-5 w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white" data-launch="diode">Launch Simulation</button>
+              </article>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
 
     <!-- WORKSPACE -->
@@ -475,6 +279,30 @@
               <input id="lattice-a" type="range" min="3.0" max="6.5" step="0.01" value="5.43" class="mt-3 w-full" />
               <p class="mt-2 text-xs text-slate-500">Range 3.0–6.5 Å. Silicon’s conventional cell is 5.43 Å. The cell orbits slowly; drag to take over.</p>
             </div>
+            <button type="button" id="lattice-si" class="preset-btn w-full cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Silicon preset · diamond · 5.431 Å</button>
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+              <input id="lattice-share" type="checkbox" class="accent-sky-400" />
+              Show shared neighbor copies
+            </label>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slate-400">Miller plane / direction</p>
+              <div class="mt-2 flex gap-2">
+                <select id="lattice-miller-kind" class="rounded-lg px-2 py-2 text-xs text-white">
+                  <option value="plane">plane (hkl)</option>
+                  <option value="dir">direction [uvw]</option>
+                </select>
+                <input id="lattice-miller" class="field w-full rounded-lg px-2 py-2 text-xs text-white" value="(210)" />
+              </div>
+              <div class="mt-2 flex flex-wrap gap-1">
+                <button type="button" data-lat-miller="(210)" data-kind="plane" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">(210)</button>
+                <button type="button" data-lat-miller="[3 2 0]" data-kind="dir" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">[320]</button>
+                <button type="button" data-lat-miller="[0 1 -2]" data-kind="dir" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">[0 1 -2]</button>
+              </div>
+            </div>
+            <div class="rounded-xl border border-white/10 p-3 text-sm">
+              <p class="text-xs uppercase tracking-wider text-slate-500">Atomic density</p>
+              <p id="lattice-dens" class="font-mono text-sky-200"></p>
+            </div>
             <div class="rounded-xl border border-sky-400/20 bg-sky-400/5 p-4">
               <p class="text-xs uppercase tracking-wider text-sky-300/80">Effective atoms in the unit cell</p>
               <p id="lattice-neff" class="mt-1 font-mono text-3xl font-semibold text-white">1</p>
@@ -490,6 +318,7 @@
             <div id="plot-lattice" class="js-plot plot-3d"></div>
           </div>
         </div>
+        <p id="lattice-why" class="why-box mt-5 rounded-r-xl px-4 py-3 text-sm text-slate-300">Drag a, flip the lattice, or paint a Miller plane. Density and the shared-atom ghosts are live.</p>
         <p class="takeaway">Those corner atoms are shared with seven other cells. The number on the left is what this cube actually owns — not how many spheres you can count.</p>
       </div>
 
@@ -657,6 +486,416 @@
         </div>
         <p class="takeaway">Doping does not paint extra carriers onto the plot. It slides E<sub>F</sub> until N(E)·f(E) has a band edge to live in — and the other side empties out.</p>
       </div>
+
+      <!-- SIM 6: LED -->
+      <div id="panel-led" class="sim-panel hidden fade-view">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-white sm:text-3xl">Bandgap → LED Color</h2>
+          <p class="mt-2 max-w-3xl text-slate-400">Recombination releases roughly E<sub>photon</sub> = E<sub>g</sub>. Wavelength follows <span class="eq italic">λ</span> = <span class="eq italic">hc</span> / E<sub>g</sub>. The vertical axis is electron energy — the electron is not falling through space.</p>
+        </div>
+
+        <div class="grid gap-5 xl:grid-cols-[300px_minmax(0,1fr)_280px]">
+          <aside class="glass space-y-5 rounded-2xl p-5">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">LED material (approximate E<sub>g</sub>)</p>
+              <div id="led-presets" class="mt-2 flex flex-wrap gap-2"></div>
+              <p class="mt-2 text-xs leading-relaxed text-slate-500">Real LED color also depends on alloy composition, quantum wells, and package. These gaps are room-temperature ballparks.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-medium text-slate-300">Bandgap E<sub>g</sub></span>
+                <span id="led-eg-label" class="font-mono text-amber-200">1.90 eV</span>
+              </div>
+              <input id="led-eg" type="range" min="1.40" max="3.50" step="0.01" value="1.90" class="mt-3 w-full" />
+              <div class="mt-1 flex justify-between text-[11px] uppercase tracking-wider text-slate-500">
+                <span>IR / red</span>
+                <span>blue / UV</span>
+              </div>
+            </div>
+            <div class="glass flex gap-2 rounded-xl p-1">
+              <button type="button" data-led-gap="direct" class="led-gap-mode flex-1 cursor-pointer rounded-lg bg-electron px-3 py-2 text-xs font-semibold text-white">Direct</button>
+              <button type="button" data-led-gap="indirect" class="led-gap-mode flex-1 cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5">Indirect</button>
+            </div>
+            <button type="button" id="led-recombine" class="launch-btn w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white">
+              <i class="fa-solid fa-bolt mr-2"></i>Recombine
+            </button>
+            <dl class="space-y-2 text-sm">
+              <div class="flex justify-between gap-3 border-b border-white/5 py-1.5"><dt class="text-slate-400">E<sub>g</sub></dt><dd id="led-eg-read" class="font-mono text-slate-100"></dd></div>
+              <div class="flex justify-between gap-3 border-b border-white/5 py-1.5"><dt class="text-slate-400">E<sub>photon</sub> ≈ E<sub>g</sub></dt><dd id="led-eph-read" class="font-mono text-amber-200"></dd></div>
+              <div class="flex justify-between gap-3 border-b border-white/5 py-1.5"><dt class="text-slate-400">λ = hc / E<sub>g</sub></dt><dd id="led-lam-read" class="font-mono text-sky-200"></dd></div>
+              <div class="flex justify-between gap-3 border-b border-white/5 py-1.5"><dt class="text-slate-400">Color</dt><dd id="led-color-read" class="font-mono text-white"></dd></div>
+              <div class="flex justify-between gap-3 py-1.5"><dt class="text-slate-400">V<sub>F</sub> ≈ E<sub>g</sub>/q</dt><dd id="led-vf-read" class="font-mono text-slate-100"></dd></div>
+            </dl>
+          </aside>
+
+          <div class="space-y-4">
+            <div class="glass rounded-2xl p-3">
+              <p class="px-2 pt-1 text-sm font-semibold text-slate-200">Energy bands <span class="font-normal text-slate-500">· recombination</span></p>
+              <svg id="led-bands" viewBox="0 0 520 340" class="h-auto w-full" role="img" aria-label="Semiconductor band diagram with recombination"></svg>
+            </div>
+            <p id="led-msg" class="rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3 text-sm text-slate-300">An injected electron sits in the conduction band. Recombination can release that gap energy as a photon.</p>
+            <div class="glass rounded-2xl p-4 text-sm leading-relaxed text-slate-400">
+              The diagram is a map of <span class="text-slate-200">electron energy</span>, not a picture of an electron tumbling through the chip. Direct-gap materials (GaAs, InGaN) let the electron and hole share the same crystal momentum, so a photon can carry the energy by itself. Indirect-gap crystals (Si, and GaP to a large extent) also need a phonon — most of the energy ends up as heat.
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="glass flex flex-col items-center rounded-2xl p-5">
+              <p class="self-start text-xs font-semibold uppercase tracking-wider text-slate-400">Emitted light</p>
+              <div id="led-bulb" class="led-bulb mt-5"></div>
+              <p id="led-bulb-cap" class="mt-4 text-center font-mono text-sm text-slate-300"></p>
+            </div>
+            <div class="glass rounded-2xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Approximate V<sub>F</sub></p>
+              <p class="mt-1 text-xs text-slate-500">q V<sub>F</sub> ≈ E<sub>g</sub> is a first-cut rule, not a datasheet. Series resistance and contacts add extra volts.</p>
+              <div class="mt-4 space-y-3">
+                <div>
+                  <div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Red LED ~1.8 V</span><span>1.8 V</span></div>
+                  <div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full rounded-full bg-red-500" style="width:51%"></div></div>
+                </div>
+                <div>
+                  <div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>This device</span><span id="led-vf-bar-label">1.90 V</span></div>
+                  <div class="h-2 overflow-hidden rounded-full bg-slate-800"><div id="led-vf-bar" class="h-full rounded-full bg-amber-300" style="width:54%"></div></div>
+                </div>
+                <div>
+                  <div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Blue LED ~3.0 V</span><span>3.0 V</span></div>
+                  <div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full rounded-full bg-sky-400" style="width:86%"></div></div>
+                </div>
+              </div>
+              <p class="mt-3 text-xs leading-relaxed text-slate-500">A blue LED is not “brighter voltage.” It is a larger gap, so each injected electron must be lifted farther in energy before it can recombine.</p>
+            </div>
+          </div>
+        </div>
+        <p class="takeaway">Bluer is not a different kind of electron. It is a larger E<sub>g</sub>, a higher-energy photon, a shorter wavelength — and, to first order, a larger V<sub>F</sub>.</p>
+      </div>
+
+      <!-- SIM 7: PN → circuit -->
+      <div id="panel-diode" class="sim-panel hidden fade-view">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-white sm:text-3xl">PN Junction → Diode Q-Point</h2>
+          <p class="mt-2 max-w-3xl text-slate-400">Three panels, one voltage. The junction bias <span class="eq italic">is</span> the solved diode voltage — cartoons and the circuit are not allowed to disagree.</p>
+        </div>
+
+        <div class="glass mb-5 grid gap-4 rounded-2xl p-5 lg:grid-cols-2 xl:grid-cols-4">
+          <div>
+            <div class="flex justify-between text-sm"><span class="text-slate-300">Source V<sub>s</sub></span><span id="diode-vs-lab" class="font-mono text-sky-300">5.00 V</span></div>
+            <input id="diode-vs" type="range" min="-2" max="10" step="0.05" value="5" class="mt-2 w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between text-sm"><span class="text-slate-300">Resistor R</span><span id="diode-r-lab" class="font-mono text-sky-300">330 Ω</span></div>
+            <input id="diode-r" type="range" min="50" max="10000" step="10" value="330" class="mt-2 w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between text-sm"><span class="text-slate-300">I<sub>s</sub></span><span id="diode-is-lab" class="font-mono text-sky-300">1.0e-12 A</span></div>
+            <input id="diode-is" type="range" min="0" max="100" step="1" value="40" class="mt-2 w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between text-sm"><span class="text-slate-300">Ideality n</span><span id="diode-n-lab" class="font-mono text-sky-300">1.00</span></div>
+            <input id="diode-n" type="range" min="1" max="2" step="0.02" value="1" class="mt-2 w-full" />
+          </div>
+          <div>
+            <div class="flex justify-between text-sm"><span class="text-slate-300">Temperature</span><span id="diode-t-lab" class="font-mono text-sky-300">300 K</span></div>
+            <input id="diode-t" type="range" min="250" max="400" step="1" value="300" class="mt-2 w-full" />
+          </div>
+          <div class="flex items-end gap-3">
+            <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+              <input id="diode-led-mode" type="checkbox" class="h-4 w-4 accent-sky-400" />
+              LED mode
+            </label>
+          </div>
+          <div id="diode-eg-wrap" class="hidden">
+            <div class="flex justify-between text-sm"><span class="text-slate-300">LED E<sub>g</sub></span><span id="diode-eg-lab" class="font-mono text-amber-200">2.00 eV</span></div>
+            <input id="diode-eg" type="range" min="1.60" max="3.20" step="0.02" value="2.00" class="mt-2 w-full" />
+          </div>
+          <div id="diode-led-out" class="hidden flex items-center gap-3">
+            <div id="diode-led-glow" class="h-10 w-10 rounded-full"></div>
+            <p id="diode-led-lam" class="font-mono text-sm text-slate-200"></p>
+          </div>
+        </div>
+
+        <div class="mb-5 flex flex-wrap gap-2">
+          <button type="button" data-diode-preset="small" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Small Forward Bias</button>
+          <button type="button" data-diode-preset="normal" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Normal Forward Bias</button>
+          <button type="button" data-diode-preset="reverse" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Reverse Bias</button>
+          <button type="button" data-diode-preset="resist" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Increase Resistance</button>
+          <button type="button" data-diode-preset="supply" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/5">Increase Supply Voltage</button>
+        </div>
+
+        <div class="grid gap-5 xl:grid-cols-3">
+          <div class="glass rounded-2xl p-3">
+            <p class="px-2 pt-1 text-sm font-semibold text-slate-200">1 · PN junction <span class="font-normal text-slate-500">· cartoon</span></p>
+            <svg id="diode-junction" viewBox="0 0 560 214" class="h-auto w-full"></svg>
+            <p id="diode-bias-note" class="px-2 pb-1 text-xs leading-relaxed text-slate-400"></p>
+          </div>
+          <div class="glass rounded-2xl p-3">
+            <p class="px-2 pt-1 text-sm font-semibold text-slate-200">2 · Bands <span class="font-normal text-slate-500">· barrier q(Vbi − Vd)</span></p>
+            <svg id="diode-bands" viewBox="0 0 560 214" class="h-auto w-full"></svg>
+            <p class="px-2 pb-1 text-xs leading-relaxed text-slate-400">Lower the barrier a little and the Boltzmann tail sends exponentially more carriers over. That is the Shockley exponential.</p>
+          </div>
+          <div class="glass rounded-2xl p-3">
+            <p class="px-2 pt-1 text-sm font-semibold text-slate-200">3 · Circuit <span class="font-normal text-slate-500">· Vs → R → diode → GND</span></p>
+            <svg viewBox="0 0 320 90" class="mx-auto mt-2 h-auto w-full max-w-sm">
+              <text id="diode-schem-vs" x="28" y="22" fill="#7dd3fc" font-size="11" font-family="IBM Plex Mono, monospace">5 V</text>
+              <rect x="20" y="32" width="28" height="36" rx="3" fill="none" stroke="#38bdf8"/>
+              <text x="24" y="54" fill="#94a3b8" font-size="10">Vs</text>
+              <line x1="48" y1="50" x2="88" y2="50" stroke="#94a3b8"/>
+              <path d="M88 50 h8 l4 -10 l8 20 l8 -20 l8 20 l4 -10 h8" fill="none" stroke="#f87171" stroke-width="1.6"/>
+              <text id="diode-schem-r" x="100" y="28" fill="#fca5a5" font-size="11" font-family="IBM Plex Mono, monospace">330 Ω</text>
+              <line x1="136" y1="50" x2="176" y2="50" stroke="#94a3b8"/>
+              <polygon points="176,38 208,50 176,62" fill="none" stroke="#38bdf8" stroke-width="1.6"/>
+              <line x1="208" y1="38" x2="208" y2="62" stroke="#38bdf8" stroke-width="1.6"/>
+              <text id="diode-schem-vd" x="168" y="78" fill="#7dd3fc" font-size="11" font-family="IBM Plex Mono, monospace">Vd</text>
+              <line x1="208" y1="50" x2="250" y2="50" stroke="#94a3b8"/>
+              <line x1="240" y1="50" x2="260" y2="50" stroke="#94a3b8"/>
+              <line x1="244" y1="56" x2="256" y2="56" stroke="#94a3b8"/>
+              <line x1="247" y1="62" x2="253" y2="62" stroke="#94a3b8"/>
+              <text x="262" y="54" fill="#64748b" font-size="10">GND</text>
+            </svg>
+            <dl class="mt-2 space-y-1 px-2 text-sm">
+              <div class="flex justify-between"><dt class="text-slate-400">Vd</dt><dd id="diode-vd" class="font-mono text-sky-200"></dd></div>
+              <div class="flex justify-between"><dt class="text-slate-400">Vr</dt><dd id="diode-vr" class="font-mono text-red-200"></dd></div>
+              <div class="flex justify-between"><dt class="text-slate-400">I</dt><dd id="diode-i" class="font-mono text-amber-200"></dd></div>
+            </dl>
+            <p id="diode-kvl" class="mt-2 px-2 font-mono text-[11px] text-slate-400"></p>
+            <p id="diode-ohm" class="px-2 font-mono text-[11px] text-slate-400"></p>
+          </div>
+        </div>
+
+        <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div class="glass rounded-2xl p-2">
+            <p class="px-2 pt-2 text-sm font-semibold text-slate-200">I–V meets the load line</p>
+            <div id="plot-diode-iv" class="js-plot" style="min-height: 420px;"></div>
+          </div>
+          <div class="glass space-y-3 rounded-2xl p-4 text-sm">
+            <p class="text-xs font-semibold uppercase tracking-wider text-amber-200">Why not a fixed R?</p>
+            <div class="flex justify-between"><span class="text-slate-400">R<sub>static</sub> = Vd / I</span><span id="diode-rstat" class="font-mono text-white"></span></div>
+            <div class="flex justify-between"><span class="text-slate-400">r<sub>d</sub> ≈ n V<sub>T</sub> / I</span><span id="diode-rd" class="font-mono text-sky-200"></span></div>
+            <p id="diode-rstat-note" class="text-xs leading-relaxed text-slate-400"></p>
+            <p class="text-xs leading-relaxed text-slate-500">R<sub>static</sub> is the chord from the origin to Q. r<sub>d</sub> is the local slope — what a small signal actually sees. Neither is printed on the diode.</p>
+          </div>
+        </div>
+        <p class="takeaway">The exponential is not a personality trait of the symbol. It is a shrinking barrier dumping a Boltzmann tail of carriers across a junction — and the resistor decides how far that can go.</p>
+      </div>
+
+      <!-- CORE CONCEPTS LAB -->
+      <div id="panel-lab" class="sim-panel hidden fade-view">
+        <div class="mb-5">
+          <h2 class="text-2xl font-bold text-white sm:text-3xl">ESE 2180 Core Concepts Lab</h2>
+          <p class="mt-2 max-w-3xl text-slate-400">Tinker. Every slider is a cause. The plots are the effect. The yellow line names the physics in between. Curves are conceptual models, not textbook-accurate band structures.</p>
+        </div>
+
+        <div class="glass mb-4 flex flex-col gap-4 rounded-2xl p-4 sm:flex-row sm:items-end sm:justify-between">
+          <div class="min-w-[200px] flex-1">
+            <div class="flex justify-between text-xs"><span class="text-slate-400">Shared temperature</span><span id="lab-strip-t" class="font-mono text-sky-300">300 K</span></div>
+            <input id="lab-strip-t-in" type="range" min="0" max="800" step="1" value="300" class="mt-2 w-full" />
+          </div>
+          <div class="min-w-[200px] flex-1">
+            <div class="flex justify-between text-xs"><span class="text-slate-400">Shared bandgap</span><span id="lab-strip-eg" class="font-mono text-amber-200">1.12 eV</span></div>
+            <input id="lab-strip-eg-in" type="range" min="0.6" max="3.2" step="0.02" value="1.12" class="mt-2 w-full" />
+          </div>
+          <p class="text-sm text-slate-300">Gap type · <span id="lab-strip-gap" class="font-semibold text-white">indirect (Si-like)</span></p>
+        </div>
+
+        <div class="mb-4 flex flex-wrap gap-2">
+          <button type="button" class="lab-tab active cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold" data-lab-tab="crystal">1 · Crystal</button>
+          <button type="button" class="lab-tab cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold" data-lab-tab="ek">2 · E–k</button>
+          <button type="button" class="lab-tab cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold" data-lab-tab="fermi">3 · Fermi–Dirac</button>
+          <button type="button" class="lab-tab cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold" data-lab-tab="carriers">4 · Carriers</button>
+          <button type="button" class="lab-tab cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold" data-lab-tab="circuit">5 · Junction → circuit</button>
+        </div>
+
+        <p id="lab-why" class="why-box mb-5 rounded-r-xl px-4 py-3 text-sm leading-relaxed text-slate-200">Move a control. This line names the cause, then the effect.</p>
+
+        <!-- TAB 1 -->
+        <div id="lab-pane-crystal" class="lab-pane">
+          <div class="grid gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
+            <aside class="glass space-y-4 rounded-2xl p-5">
+              <label class="block text-sm font-medium text-slate-300">
+                Conventional cell
+                <select id="lab-lat-type" class="mt-2 w-full rounded-lg px-3 py-2.5 text-sm text-white">
+                  <option value="sc">Simple Cubic</option>
+                  <option value="bcc">BCC</option>
+                  <option value="fcc">FCC</option>
+                  <option value="diamond" selected>Diamond Cubic</option>
+                </select>
+              </label>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Lattice constant a</span><span id="lab-lat-a-lab" class="font-mono text-sky-300">5.431 Å</span></div>
+                <input id="lab-lat-a" type="range" min="3.0" max="6.5" step="0.001" value="5.431" class="mt-2 w-full" />
+              </div>
+              <button type="button" id="lab-si" class="preset-btn w-full cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">Silicon · diamond · 5.431 Å</button>
+              <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+                <input id="lab-lat-share" type="checkbox" class="accent-sky-400" />
+                Show shared neighbor cells
+              </label>
+              <p class="text-xs leading-relaxed text-slate-500">Corners are shared by 8 cells → ⅛. Faces by 2 → ½. Body and internal atoms are wholly owned.</p>
+              <div class="rounded-xl border border-white/10 p-3 text-sm">
+                <p class="text-xs uppercase tracking-wider text-slate-500">Effective atoms / cell</p>
+                <p id="lab-lat-neff" class="font-mono text-3xl text-white">8</p>
+                <p class="mt-2 text-xs uppercase tracking-wider text-slate-500">Atomic density n = N / a³</p>
+                <p id="lab-lat-dens" class="font-mono text-sky-200"></p>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-slate-400">Miller plane / direction</p>
+                <div class="mt-2 flex gap-2">
+                  <select id="lab-miller-kind" class="rounded-lg px-2 py-2 text-xs text-white">
+                    <option value="plane">plane (hkl)</option>
+                    <option value="dir">direction [uvw]</option>
+                  </select>
+                  <input id="lab-miller" class="field w-full rounded-lg px-2 py-2 text-xs text-white" value="(210)" />
+                </div>
+                <div class="mt-2 flex flex-wrap gap-1">
+                  <button type="button" data-miller="(210)" data-kind="plane" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">(210)</button>
+                  <button type="button" data-miller="[320]" data-kind="dir" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">[320]</button>
+                  <button type="button" data-miller="[0 1 -2]" data-kind="dir" class="preset-btn cursor-pointer rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-300">[0 1 −2]</button>
+                </div>
+              </div>
+            </aside>
+            <div class="glass overflow-hidden rounded-2xl p-2">
+              <div id="plot-lab-crystal" class="js-plot plot-3d"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2 -->
+        <div id="lab-pane-ek" class="lab-pane hidden">
+          <div class="grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <aside class="glass space-y-4 rounded-2xl p-5">
+              <p class="text-xs leading-relaxed text-slate-500">Conceptual parabolas — not measured Si or GaAs bands. Energy is vertical. Crystal momentum k is horizontal. Photons carry energy; they barely carry momentum.</p>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" data-lab-gap="indirect" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">Silicon · indirect</button>
+                <button type="button" data-lab-gap="direct" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">GaAs · direct</button>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Bandgap Eg</span><span id="lab-ek-eg-lab" class="font-mono text-amber-200">1.12 eV</span></div>
+                <input id="lab-ek-eg" type="range" min="0.6" max="3.2" step="0.02" value="1.12" class="mt-2 w-full" />
+              </div>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Band curvature</span><span id="lab-ek-curve-lab" class="font-mono text-sky-300">1.15</span></div>
+                <input id="lab-ek-curve" type="range" min="0.35" max="2.4" step="0.05" value="1.15" class="mt-2 w-full" />
+                <p class="mt-2 text-xs text-slate-500">1/m* ∝ d²E/dk². Sharper bend → lighter carrier → easier to accelerate → higher mobility.</p>
+              </div>
+              <div class="rounded-xl border border-white/10 p-3 text-sm">
+                <p class="text-xs uppercase tracking-wider text-slate-500">Relative m*</p>
+                <p id="lab-ek-m" class="font-mono text-xl text-white"></p>
+              </div>
+            </aside>
+            <div class="glass rounded-2xl p-2">
+              <div id="plot-lab-ek" class="js-plot" style="min-height: 460px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3 -->
+        <div id="lab-pane-fermi" class="lab-pane hidden">
+          <div class="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)_220px]">
+            <aside class="glass space-y-4 rounded-2xl p-5">
+              <p class="text-xs leading-relaxed text-slate-500">f(E) is the chance a state at energy E is occupied — not a count of electrons by itself.</p>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Temperature</span><span id="lab-fd-t-lab" class="font-mono text-sky-300">300 K</span></div>
+                <input id="lab-fd-t" type="range" min="0" max="800" step="1" value="300" class="mt-2 w-full" />
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" data-lab-t="0" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">0 K</button>
+                <button type="button" data-lab-t="300" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">300 K</button>
+                <button type="button" data-lab-t="500" class="preset-btn cursor-pointer rounded-lg border border-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300">500 K</button>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Fermi energy Ef</span><span id="lab-fd-ef-lab" class="font-mono text-amber-200">0.00 eV</span></div>
+                <input id="lab-fd-ef" type="range" min="-0.8" max="0.8" step="0.01" value="0" class="mt-2 w-full" />
+              </div>
+              <p class="text-xs leading-relaxed text-slate-500">At any T &gt; 0, f(Ef) = ½. That is a definition check, not a coincidence.</p>
+            </aside>
+            <div class="glass rounded-2xl p-2">
+              <div id="plot-lab-fd" class="js-plot" style="min-height: 440px;"></div>
+            </div>
+            <div class="glass rounded-2xl p-4">
+              <p class="mb-3 text-xs uppercase tracking-wider text-slate-400">Discrete states</p>
+              <p class="mb-3 text-[11px] leading-relaxed text-slate-500">Filled = occupied. Open crimson = hole below Ef. Heat the smear and watch both appear.</p>
+              <div id="lab-fd-rungs" class="space-y-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4 -->
+        <div id="lab-pane-carriers" class="lab-pane hidden">
+          <div class="grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <aside class="glass space-y-4 rounded-2xl p-5">
+              <label class="block text-sm font-medium text-slate-300">
+                Semiconductor
+                <select id="lab-car-mode" class="mt-2 w-full rounded-lg px-3 py-2.5 text-sm text-white">
+                  <option value="intrinsic">Intrinsic</option>
+                  <option value="n">N-type</option>
+                  <option value="p">P-type</option>
+                </select>
+              </label>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Donors Nd</span><span id="lab-nd-lab" class="font-mono text-sky-300">1.0e+16</span></div>
+                <input id="lab-nd" type="range" min="12" max="19" step="0.1" value="16" class="mt-2 w-full" />
+              </div>
+              <div>
+                <div class="flex justify-between text-sm"><span class="text-slate-300">Acceptors Na</span><span id="lab-na-lab" class="font-mono text-rose-300">1.0e+12</span></div>
+                <input id="lab-na" type="range" min="12" max="19" step="0.1" value="12" class="mt-2 w-full" />
+              </div>
+              <dl class="space-y-1.5 text-sm">
+                <div class="flex justify-between"><dt class="text-slate-400">Ef</dt><dd id="lab-car-ef" class="font-mono text-amber-200"></dd></div>
+                <div class="flex justify-between"><dt class="text-slate-400">n (cm⁻³)</dt><dd id="lab-car-n" class="font-mono text-sky-200"></dd></div>
+                <div class="flex justify-between"><dt class="text-slate-400">p (cm⁻³)</dt><dd id="lab-car-p" class="font-mono text-rose-200"></dd></div>
+                <div class="flex justify-between"><dt class="text-slate-400">n · p</dt><dd id="lab-car-np" class="font-mono text-white"></dd></div>
+                <div class="flex justify-between"><dt class="text-slate-400">ni²</dt><dd id="lab-car-ni2" class="font-mono text-slate-300"></dd></div>
+              </dl>
+              <p class="text-xs leading-relaxed text-slate-500">n rises as Ef approaches Ec. p rises as Ef approaches Ev. The product stays ni². Conductivity tracks the majority carrier.</p>
+            </aside>
+            <div class="glass rounded-2xl p-4">
+              <svg id="lab-car-bands" viewBox="0 0 400 260" class="h-auto w-full" role="img" aria-label="Band diagram with carriers"></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5 -->
+        <div id="lab-pane-circuit" class="lab-pane hidden">
+          <div class="glass mb-5 grid gap-4 rounded-2xl p-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div>
+              <div class="flex justify-between text-sm"><span class="text-slate-300">Source Vs</span><span id="lab-vs-lab" class="font-mono text-sky-300">5.00 V</span></div>
+              <input id="lab-vs" type="range" min="-2" max="10" step="0.05" value="5" class="mt-2 w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-sm"><span class="text-slate-300">Resistor R</span><span id="lab-r-lab" class="font-mono text-sky-300">330 Ω</span></div>
+              <input id="lab-r" type="range" min="50" max="8000" step="10" value="330" class="mt-2 w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-sm"><span class="text-slate-300">Is</span><span id="lab-is-lab" class="font-mono text-sky-300">1.0e-12 A</span></div>
+              <input id="lab-is" type="range" min="0" max="100" step="1" value="40" class="mt-2 w-full" />
+            </div>
+            <div>
+              <div class="flex justify-between text-sm"><span class="text-slate-300">Ideality n</span><span id="lab-nfact-lab" class="font-mono text-sky-300">1.00</span></div>
+              <input id="lab-nfact" type="range" min="1" max="2" step="0.02" value="1" class="mt-2 w-full" />
+            </div>
+          </div>
+          <p class="mb-4 text-xs text-slate-500">Temperature and Eg come from the shared strip above. Vs → R → diode → ground. The yellow dot is the only voltage the junction is allowed to have.</p>
+          <div class="grid gap-5 lg:grid-cols-2">
+            <div class="glass rounded-2xl p-4">
+              <p class="mb-2 text-sm font-semibold text-slate-200">PN junction (live with Vd)</p>
+              <svg id="lab-c-junc" viewBox="0 0 320 108" class="h-auto w-full" role="img" aria-label="PN junction"></svg>
+              <dl class="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <div class="flex justify-between gap-2"><dt class="text-slate-400">Vd</dt><dd id="lab-c-vd" class="font-mono text-sky-200"></dd></div>
+                <div class="flex justify-between gap-2"><dt class="text-slate-400">Vr</dt><dd id="lab-c-vr" class="font-mono text-rose-200"></dd></div>
+                <div class="flex justify-between gap-2"><dt class="text-slate-400">I</dt><dd id="lab-c-i" class="font-mono text-amber-200"></dd></div>
+                <div class="flex justify-between gap-2"><dt class="text-slate-400">R<sub>static</sub></dt><dd id="lab-c-rs" class="font-mono text-white"></dd></div>
+                <div class="flex justify-between gap-2"><dt class="text-slate-400">r<sub>d</sub></dt><dd id="lab-c-rd" class="font-mono text-sky-200"></dd></div>
+              </dl>
+              <p id="lab-c-kvl" class="mt-2 font-mono text-[11px] text-slate-400"></p>
+              <p id="lab-c-ohm" class="font-mono text-[11px] text-slate-400"></p>
+            </div>
+            <div class="glass rounded-2xl p-2">
+              <p class="px-2 pt-2 text-sm font-semibold text-slate-200">Shockley curve × load line</p>
+              <div id="plot-lab-iv" class="js-plot" style="min-height: 400px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="takeaway">atoms → periodic potential → bands → gap → occupation → n and p → junction → nonlinear I–V → the voltages a circuit is actually allowed to have.</p>
+      </div>
     </section>
   </div>
 
@@ -665,725 +904,9 @@
   </footer>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script>
-    const NA = 6.02214076e23;
-    const kB = 8.617333262145e-5; // eV/K
-    const PLOTLY_BG = 'rgba(0,0,0,0)';
-    const FONT = { family: 'IBM Plex Sans, sans-serif', color: '#cbd5e1', size: 12 };
-
-    const kickers = {
-      lattice: '3D Geometry',
-      density: 'Computation',
-      waves: 'Wave–Particle Duality',
-      bandgap: 'Band Physics',
-      fermi: 'Statistics',
-    };
-
-    const catalogView = document.getElementById('catalog-view');
-    const workspaceView = document.getElementById('workspace-view');
-    const topic1 = document.getElementById('topic-1');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const inited = {};
-    let activeSim = null;
-    let absorbTimer = 0;
-    let latticeRaf = 0;
-    let latticeAngle = 0.85;
-    let latticeOrbiting = true;
-    let latticeGrabUntil = 0;
-    let waveRaf = 0;
-    let waveT = 0;
-    let wavePlaying = true;
-    let waveReady = false;
-    let fermiSweepRaf = 0;
-
-    (function splitWordmark() {
-      const el = document.getElementById('wordmark');
-      if (!el || reduceMotion) return;
-      el.innerHTML = el.textContent.split('').map((ch, i) =>
-        '<span class="wm-letter" style="animation-delay:' + (i * 48) + 'ms">' + ch + '</span>'
-      ).join('');
-    })();
-
-    document.getElementById('accordion-toggle').addEventListener('click', () => {
-      const open = topic1.classList.toggle('accordion-open');
-      document.getElementById('accordion-toggle').setAttribute('aria-expanded', String(open));
-    });
-
-    document.querySelectorAll('[data-launch]').forEach((btn) => {
-      btn.addEventListener('click', () => launch(btn.dataset.launch));
-    });
-
-    document.getElementById('back-btn').addEventListener('click', backToCatalog);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !workspaceView.classList.contains('hidden')) backToCatalog();
-    });
-
-    function stopLoops() {
-      cancelAnimationFrame(latticeRaf);
-      cancelAnimationFrame(waveRaf);
-      cancelAnimationFrame(fermiSweepRaf);
-      latticeRaf = waveRaf = fermiSweepRaf = 0;
-      clearTimeout(absorbTimer);
-    }
-
-    function launch(id) {
-      stopLoops();
-      activeSim = id;
-      catalogView.style.opacity = '0';
-      catalogView.style.transition = 'opacity 280ms ease';
-      setTimeout(() => {
-        catalogView.classList.add('hidden');
-        catalogView.style.opacity = '';
-        catalogView.style.transition = '';
-        workspaceView.classList.remove('hidden');
-        document.getElementById('workspace-kicker').textContent = kickers[id];
-        document.querySelectorAll('.sim-panel').forEach((p) => p.classList.add('hidden'));
-        document.getElementById('panel-' + id).classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        requestAnimationFrame(() => {
-          if (id === 'lattice') initLattice();
-          if (id === 'density') initDensity();
-          if (id === 'waves') initWaves();
-          if (id === 'bandgap') initBandgap();
-          if (id === 'fermi') initFermi();
-          resizeVisible();
-        });
-      }, 260);
-    }
-
-    function backToCatalog() {
-      stopLoops();
-      activeSim = null;
-      workspaceView.classList.add('hidden');
-      catalogView.classList.remove('hidden');
-      catalogView.style.opacity = '0';
-      requestAnimationFrame(() => {
-        catalogView.style.transition = 'opacity 280ms ease';
-        catalogView.style.opacity = '1';
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function resizeVisible() {
-      document.querySelectorAll('.js-plot').forEach((el) => {
-        if (el.offsetParent !== null && el.data) Plotly.Plots.resize(el);
-      });
-    }
-    window.addEventListener('resize', resizeVisible);
-
-    function baseLayout(extra) {
-      return Object.assign({
-        paper_bgcolor: PLOTLY_BG,
-        plot_bgcolor: 'rgba(15, 23, 42, 0.35)',
-        font: FONT,
-        margin: { l: 55, r: 20, t: 30, b: 50 },
-        hovermode: 'closest',
-      }, extra);
-    }
-
-    function sciHTML(n, digits) {
-      if (!isFinite(n) || n === 0) return '0';
-      const sign = n < 0 ? '-' : '';
-      const abs = Math.abs(n);
-      const exp = Math.floor(Math.log10(abs));
-      const man = abs / Math.pow(10, exp);
-      return sign + man.toFixed(digits) + ' × 10<sup>' + exp + '</sup>';
-    }
-
-    /* ========== SIM 1: Lattice ========== */
-    const CUBE_EDGES = [
-      [0,0,0,1,0,0],[1,0,0,1,1,0],[1,1,0,0,1,0],[0,1,0,0,0,0],
-      [0,0,1,1,0,1],[1,0,1,1,1,1],[1,1,1,0,1,1],[0,1,1,0,0,1],
-      [0,0,0,0,0,1],[1,0,0,1,0,1],[1,1,0,1,1,1],[0,1,0,0,1,1],
-    ];
-
-    const DIAMOND_BONDS = [
-      [[0.25,0.25,0.25],[0,0,0]],
-      [[0.25,0.25,0.25],[0.5,0.5,0]],
-      [[0.25,0.25,0.25],[0.5,0,0.5]],
-      [[0.25,0.25,0.25],[0,0.5,0.5]],
-      [[0.75,0.75,0.25],[0.5,0.5,0]],
-      [[0.75,0.75,0.25],[1,1,0]],
-      [[0.75,0.75,0.25],[1,0.5,0.5]],
-      [[0.75,0.75,0.25],[0.5,1,0.5]],
-      [[0.75,0.25,0.75],[0.5,0,0.5]],
-      [[0.75,0.25,0.75],[1,0,1]],
-      [[0.75,0.25,0.75],[1,0.5,0.5]],
-      [[0.75,0.25,0.75],[0.5,0.5,1]],
-      [[0.25,0.75,0.75],[0,0.5,0.5]],
-      [[0.25,0.75,0.75],[0.5,1,0.5]],
-      [[0.25,0.75,0.75],[0,1,1]],
-      [[0.25,0.75,0.75],[0.5,0.5,1]],
-    ];
-
-    const LATTICE_META = {
-      sc: { n: 1, note: '8 corners × ⅛ = 1 atom inside the conventional cell.' },
-      bcc: { n: 2, note: '8 corners × ⅛ + 1 body center = 2 atoms.' },
-      fcc: { n: 4, note: '8 corners × ⅛ + 6 faces × ½ = 4 atoms.' },
-      diamond: { n: 8, note: 'Two interpenetrating FCC lattices (4 + 4) = 8 atoms. Silicon’s basis.' },
-    };
-
-    function corners(a) {
-      return [[0,0,0],[a,0,0],[a,a,0],[0,a,0],[0,0,a],[a,0,a],[a,a,a],[0,a,a]];
-    }
-    function faces(a) {
-      const h = a / 2;
-      return [[h,h,0],[h,h,a],[h,0,h],[h,a,h],[0,h,h],[a,h,h]];
-    }
-
-    function lineTrace(x, y, z, color, width, name) {
-      return {
-        type: 'scatter3d', mode: 'lines', x, y, z, name,
-        line: { color, width },
-        hoverinfo: 'skip',
-        showlegend: false,
-      };
-    }
-
-    function cubeWire(a) {
-      const x = [], y = [], z = [];
-      CUBE_EDGES.forEach((e) => {
-        x.push(e[0]*a, e[3]*a, null);
-        y.push(e[1]*a, e[4]*a, null);
-        z.push(e[2]*a, e[5]*a, null);
-      });
-      return lineTrace(x, y, z, 'rgba(148,163,184,0.55)', 3, 'cell');
-    }
-
-    function renderLattice() {
-      const type = document.getElementById('lattice-type').value;
-      const a = Number(document.getElementById('lattice-a').value);
-      document.getElementById('lattice-a-label').textContent = a.toFixed(2) + ' Å';
-      const meta = LATTICE_META[type];
-      document.getElementById('lattice-neff').textContent = String(meta.n);
-      document.getElementById('lattice-neff-note').textContent = meta.note;
-      document.getElementById('lattice-legend').classList.toggle('hidden', type !== 'diamond');
-
-      const traces = [cubeWire(a)];
-      const c = corners(a);
-      const f = faces(a);
-
-      function atoms(pts, color, name, size) {
-        traces.push({
-          type: 'scatter3d',
-          mode: 'markers',
-          x: pts.map((p) => p[0]),
-          y: pts.map((p) => p[1]),
-          z: pts.map((p) => p[2]),
-          name,
-          marker: { size: size || 9, color, opacity: 0.95, line: { color: '#e0f2fe', width: 0.6 } },
-        });
-      }
-
-      if (type === 'sc') {
-        atoms(c, '#0284c7', 'atoms');
-      } else if (type === 'bcc') {
-        atoms(c, '#0284c7', 'corners');
-        atoms([[a/2, a/2, a/2]], '#38bdf8', 'body center', 11);
-      } else if (type === 'fcc') {
-        atoms(c, '#0284c7', 'corners');
-        atoms(f, '#38bdf8', 'face centers', 10);
-      } else {
-        atoms(c.concat(f), '#0284c7', 'FCC A');
-        const b = [
-          [0.25,0.25,0.25],[0.75,0.75,0.25],[0.75,0.25,0.75],[0.25,0.75,0.75],
-        ].map((p) => [p[0]*a, p[1]*a, p[2]*a]);
-        atoms(b, '#e11d48', 'FCC B (a/4)');
-        const bx = [], by = [], bz = [];
-        DIAMOND_BONDS.forEach(([p, q]) => {
-          bx.push(p[0]*a, q[0]*a, null);
-          by.push(p[1]*a, q[1]*a, null);
-          bz.push(p[2]*a, q[2]*a, null);
-        });
-        traces.push(lineTrace(bx, by, bz, 'rgba(251, 191, 36, 0.55)', 3, 'bonds'));
-      }
-
-      const r = 2.35;
-      const layout = baseLayout({
-        margin: { l: 0, r: 0, t: 10, b: 0 },
-        showlegend: true,
-        uirevision: 'lattice-orbit',
-        legend: { orientation: 'h', y: -0.02, font: { color: '#94a3b8', size: 11 } },
-        scene: {
-          bgcolor: 'rgba(15,23,42,0.2)',
-          xaxis: { title: 'x (Å)', range: [-0.3, 7], gridcolor: '#1e293b', zerolinecolor: '#334155', color: '#94a3b8' },
-          yaxis: { title: 'y (Å)', range: [-0.3, 7], gridcolor: '#1e293b', zerolinecolor: '#334155', color: '#94a3b8' },
-          zaxis: { title: 'z (Å)', range: [-0.3, 7], gridcolor: '#1e293b', zerolinecolor: '#334155', color: '#94a3b8' },
-          aspectmode: 'cube',
-        },
-      });
-      if (!document.getElementById('plot-lattice').data) {
-        layout.scene.camera = {
-          eye: { x: r * Math.cos(latticeAngle), y: r * Math.sin(latticeAngle), z: 1.15 },
-        };
-      }
-
-      Plotly.react('plot-lattice', traces, layout, { responsive: true, displaylogo: false });
-    }
-
-    function tickLattice(ts) {
-      if (activeSim !== 'lattice' || reduceMotion) return;
-      if (latticeOrbiting && ts > latticeGrabUntil) {
-        latticeAngle += 0.006;
-        const r = 2.35;
-        Plotly.relayout('plot-lattice', {
-          'scene.camera.eye': {
-            x: r * Math.cos(latticeAngle),
-            y: r * Math.sin(latticeAngle),
-            z: 1.15,
-          },
-        });
-      }
-      latticeRaf = requestAnimationFrame(tickLattice);
-    }
-
-    function initLattice() {
-      if (!inited.lattice) {
-        document.getElementById('lattice-type').addEventListener('change', renderLattice);
-        document.getElementById('lattice-a').addEventListener('input', renderLattice);
-        const plot = document.getElementById('plot-lattice');
-        plot.addEventListener('mousedown', () => { latticeGrabUntil = performance.now() + 5000; });
-        plot.addEventListener('touchstart', () => { latticeGrabUntil = performance.now() + 5000; }, { passive: true });
-        inited.lattice = true;
-      }
-      renderLattice();
-      if (!reduceMotion) {
-        cancelAnimationFrame(latticeRaf);
-        latticeRaf = requestAnimationFrame(tickLattice);
-      }
-    }
-
-    /* ========== SIM 2: Density ========== */
-    const MATERIALS = {
-      Si: { name: 'Silicon (Si)', a: 5.43, N: 8, structure: 'Diamond', mass: 28.085, massLabel: 'Atomic mass' },
-      GaAs: { name: 'Gallium Arsenide (GaAs)', a: 5.65, N: 8, structure: 'Zinc-blende', mass: 72.64, massLabel: 'Average mass' },
-      Ge: { name: 'Germanium (Ge)', a: 5.64, N: 8, structure: 'Diamond', mass: 72.63, massLabel: 'Atomic mass' },
-    };
-
-    function renderDensity() {
-      const m = MATERIALS[document.getElementById('density-material').value];
-      const aCm = m.a * 1e-8;
-      const V = Math.pow(aCm, 3);
-      const n = m.N / V;
-      const rho = (m.N * m.mass) / (NA * V);
-
-      document.getElementById('density-specs').innerHTML = [
-        ['Structure', m.structure],
-        ['Atoms / cell <span class="eq italic">N</span>', String(m.N)],
-        ['Lattice constant <span class="eq italic">a</span>', m.a.toFixed(2) + ' Å = ' + aCm.toExponential(2) + ' cm'],
-        [m.massLabel, m.mass.toFixed(3) + ' g/mol'],
-        ['N<sub>A</sub>', '6.022 × 10<sup>23</sup> mol<sup>−1</sup>'],
-      ].map(([k, v]) => '<div class="flex justify-between gap-3 border-b border-white/5 py-1.5"><dt class="text-slate-400">' + k + '</dt><dd class="text-right font-mono text-slate-200">' + v + '</dd></div>').join('');
-
-      document.getElementById('density-steps').innerHTML = [
-        {
-          t: '1. Volume of the cubic unit cell',
-          eq: '<span class="eq italic">V</span><sub>cell</sub> = <span class="eq italic">a</span><sup>3</sup>',
-          n: m.a.toFixed(2) + ' Å → ' + aCm.toExponential(3) + ' cm, so <span class="eq italic">V</span><sub>cell</sub> = (' + aCm.toExponential(3) + ')<sup>3</sup> = <strong>' + sciHTML(V, 3) + ' cm<sup>3</sup></strong>',
-        },
-        {
-          t: '2. Volume density of atoms',
-          eq: '<span class="eq italic">n</span> = <span class="eq italic">N</span><sub>atoms</sub> / <span class="eq italic">V</span><sub>cell</sub>',
-          n: n.toExponential(3) + ' cm<sup>−3</sup>  →  <strong>' + sciHTML(n, 2) + ' atoms/cm<sup>3</sup></strong>' + (m.name.indexOf('Silicon') >= 0 ? ' <span class="text-sky-300">(Si textbook value ≈ 5 × 10<sup>22</sup>)</span>' : ''),
-        },
-        {
-          t: '3. Mass density',
-          eq: '<span class="eq italic">ρ</span> = (<span class="eq italic">N</span><sub>atoms</sub> × molar mass) / (N<sub>A</sub> × <span class="eq italic">V</span><sub>cell</sub>)',
-          n: '(' + m.N + ' × ' + m.mass + ') / (N<sub>A</sub> × <span class="eq italic">V</span><sub>cell</sub>) = <strong>' + rho.toFixed(3) + ' g/cm<sup>3</sup></strong>',
-        },
-      ].map((s, i) => '<li class="step-card rounded-xl border border-white/10 bg-slate-950/40 p-4" style="animation-delay:' + (i * 140) + 'ms"><p class="text-xs font-semibold uppercase tracking-wider text-slate-400">' + s.t + '</p><p class="mt-2 text-lg text-sky-100">' + s.eq + '</p><p class="mt-2 text-sm leading-relaxed text-slate-300">' + s.n + '</p></li>').join('');
-
-      document.getElementById('density-n').innerHTML = sciHTML(n, 2);
-      document.getElementById('density-rho').textContent = rho.toFixed(3);
-      document.getElementById('density-v').innerHTML = sciHTML(V, 2);
-    }
-
-    function initDensity() {
-      if (!inited.density) {
-        document.getElementById('density-material').addEventListener('change', renderDensity);
-        inited.density = true;
-      }
-      renderDensity();
-    }
-
-    /* ========== SIM 3: Waves ========== */
-    function linspace(a, b, n) {
-      const out = new Array(n);
-      const step = (b - a) / (n - 1);
-      for (let i = 0; i < n; i++) out[i] = a + i * step;
-      return out;
-    }
-
-    function waveLayout(titleY) {
-      return baseLayout({
-        margin: { l: 50, r: 16, t: 16, b: 48 },
-        legend: { orientation: 'h', y: 1.12, font: { size: 11 } },
-        xaxis: { title: 'x (arb.)', gridcolor: '#1e293b', zeroline: false, color: '#94a3b8' },
-        yaxis: { title: titleY, gridcolor: '#1e293b', zeroline: false, color: '#94a3b8', range: [-1.7, 1.7] },
-      });
-    }
-
-    const waveX = linspace(0, 16, 420);
-    const waveZero = waveX.map(() => 0);
-
-    function waveValues() {
-      const k = Number(document.getElementById('wave-k').value);
-      const a = Number(document.getElementById('wave-a').value);
-      const V0 = 0.85;
-      const plane = waveX.map((xi) => Math.cos(k * xi - waveT));
-      const u = waveX.map((xi) => Math.cos(2 * Math.PI * xi / a));
-      const bloch = waveX.map((xi, i) => u[i] * Math.cos(k * xi - waveT));
-      const V = waveX.map((xi) => -V0 * Math.cos(2 * Math.PI * xi / a));
-      return { k, a, plane, bloch, V };
-    }
-
-    function renderWaves() {
-      const { k, a, plane, bloch, V } = waveValues();
-      document.getElementById('wave-k-label').textContent = k.toFixed(2);
-      document.getElementById('wave-a-label').textContent = a.toFixed(2);
-
-      const planeTraces = [
-        { x: waveX, y: waveZero, name: 'V(x) = 0', line: { color: 'rgba(148,163,184,0.7)', width: 2, dash: 'dash' } },
-        { x: waveX, y: plane, name: 'Ψ(x,t) = A cos(kx − ωt)', line: { color: '#38bdf8', width: 2.6 } },
-      ];
-      const blochTraces = [
-        { x: waveX, y: V, name: 'V(x) = −V₀ cos(2πx/a)', fill: 'tozeroy', fillcolor: 'rgba(153,27,27,0.18)', line: { color: '#f87171', width: 1.6 } },
-        { x: waveX, y: bloch, name: 'Ψ(x,t) = u(x) cos(kx − ωt)', line: { color: '#7dd3fc', width: 2.6 } },
-      ];
-
-      Plotly.react('plot-plane', planeTraces, waveLayout('Ψ, V'), { responsive: true, displaylogo: false });
-      Plotly.react('plot-bloch', blochTraces, waveLayout('Ψ, V'), { responsive: true, displaylogo: false });
-      waveReady = true;
-    }
-
-    function updateWaveTraces() {
-      if (!waveReady) return;
-      const { plane, bloch } = waveValues();
-      Plotly.restyle('plot-plane', { y: [plane] }, [1]);
-      Plotly.restyle('plot-bloch', { y: [bloch] }, [1]);
-    }
-
-    let waveLast = 0;
-    function tickWaves(ts) {
-      if (activeSim !== 'waves' || !wavePlaying || reduceMotion) return;
-      if (ts - waveLast > 32) {
-        waveLast = ts;
-        waveT += 0.11;
-        updateWaveTraces();
-      }
-      waveRaf = requestAnimationFrame(tickWaves);
-    }
-
-    function setWaveToggle() {
-      const btn = document.getElementById('wave-toggle');
-      btn.innerHTML = wavePlaying
-        ? '<i class="fa-solid fa-pause mr-2"></i>Pause'
-        : '<i class="fa-solid fa-play mr-2"></i>Propagate';
-    }
-
-    function initWaves() {
-      if (!inited.waves) {
-        document.getElementById('wave-k').addEventListener('input', () => {
-          document.getElementById('wave-k-label').textContent =
-            Number(document.getElementById('wave-k').value).toFixed(2);
-          if (!wavePlaying) renderWaves();
-        });
-        document.getElementById('wave-a').addEventListener('input', renderWaves);
-        document.getElementById('wave-toggle').addEventListener('click', () => {
-          wavePlaying = !wavePlaying;
-          setWaveToggle();
-          if (wavePlaying) {
-            cancelAnimationFrame(waveRaf);
-            waveRaf = requestAnimationFrame(tickWaves);
-          }
-        });
-        inited.waves = true;
-      }
-      wavePlaying = !reduceMotion;
-      setWaveToggle();
-      renderWaves();
-      if (wavePlaying) {
-        cancelAnimationFrame(waveRaf);
-        waveRaf = requestAnimationFrame(tickWaves);
-      }
-    }
-
-    /* ========== SIM 4: Bandgap ========== */
-    const Ev0 = 0;
-    const Ec0 = 1.42;
-    const mh = 0.45;
-    const me = 0.38;
-    let gapMode = 'direct';
-    let absorbState = { e: [0, Ev0], photon: null, phonon: null };
-    let absorbGen = 0;
-
-    function kOffset() {
-      return gapMode === 'direct' ? 0 : 1.5;
-    }
-
-    function Ev(k) { return Ev0 - (k * k) / (2 * mh); }
-    function Ec(k) { return Ec0 + Math.pow(k - kOffset(), 2) / (2 * me); }
-
-    function setGapMsg(text, kind) {
-      const el = document.getElementById('bandgap-msg');
-      el.textContent = text;
-      el.classList.remove('status-ok', 'status-warn');
-      if (kind) el.classList.add(kind);
-    }
-
-    function bandgapTraces() {
-      const k = linspace(-2.2, 2.8, 400);
-      const traces = [
-        { x: k, y: k.map(Ev), name: 'Valence band', line: { color: '#ef4444', width: 3 } },
-        { x: k, y: k.map(Ec), name: 'Conduction band', line: { color: '#38bdf8', width: 3 } },
-        {
-          x: [absorbState.e[0]],
-          y: [absorbState.e[1]],
-          name: 'Electron',
-          mode: 'markers',
-          marker: { size: 14, color: '#7dd3fc', line: { color: '#e0f2fe', width: 2 } },
-        },
-      ];
-      return traces;
-    }
-
-    function bandgapLayout() {
-      const annotations = [
-        { x: 0, y: Ev0 - 0.15, text: 'VB max', showarrow: false, font: { color: '#fca5a5', size: 11 } },
-        { x: kOffset(), y: Ec0 + 0.18, text: 'CB min', showarrow: false, font: { color: '#7dd3fc', size: 11 } },
-      ];
-      if (absorbState.photon) {
-        annotations.push({
-          x: absorbState.photon[0], y: absorbState.photon[1],
-          ax: absorbState.photon[2], ay: absorbState.photon[3],
-          axref: 'x', ayref: 'y', showarrow: true, arrowhead: 3, arrowwidth: 3,
-          arrowcolor: '#fbbf24', text: '  ħω (photon)', font: { color: '#fde68a', size: 12 },
-        });
-      }
-      if (absorbState.phonon) {
-        annotations.push({
-          x: absorbState.phonon[0], y: absorbState.phonon[1],
-          ax: absorbState.phonon[2], ay: absorbState.phonon[3],
-          axref: 'x', ayref: 'y', showarrow: true, arrowhead: 3, arrowwidth: 3,
-          arrowcolor: '#fb7185', text: '  phonon ħΩ', font: { color: '#fda4af', size: 12 },
-        });
-      }
-      return baseLayout({
-        margin: { l: 60, r: 20, t: 24, b: 50 },
-        legend: { orientation: 'h', y: 1.08 },
-        annotations,
-        shapes: [
-          { type: 'line', x0: 0, x1: 0, y0: -1.6, y1: 3.2, line: { color: 'rgba(148,163,184,0.25)', dash: 'dot' } },
-        ],
-        xaxis: { title: 'Crystal momentum k (arb.)', gridcolor: '#1e293b', zeroline: false, range: [-2.3, 2.9] },
-        yaxis: { title: 'Energy E (eV, schematic)', gridcolor: '#1e293b', zeroline: false, range: [-1.6, 3.2] },
-      });
-    }
-
-    function renderBandgap() {
-      Plotly.react('plot-bandgap', bandgapTraces(), bandgapLayout(), { responsive: true, displaylogo: false });
-    }
-
-    function resetAbsorb() {
-      absorbGen += 1;
-      clearTimeout(absorbTimer);
-      absorbState = { e: [0, Ev0], photon: null, phonon: null };
-      document.getElementById('absorb-btn').disabled = false;
-      setGapMsg('Valence electron sits at k = 0. A photon supplies energy Eg with essentially zero momentum — the arrow is vertical.');
-      renderBandgap();
-    }
-
-    function sleep(ms) {
-      return new Promise((resolve) => { absorbTimer = setTimeout(resolve, ms); });
-    }
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    async function slideElectron(from, to, ms, onTick) {
-      const steps = 22;
-      const dt = ms / steps;
-      for (let i = 1; i <= steps; i++) {
-        const t = i / steps;
-        absorbState.e = [lerp(from[0], to[0], t), lerp(from[1], to[1], t)];
-        if (onTick) onTick(t);
-        renderBandgap();
-        await sleep(dt);
-      }
-    }
-
-    async function runAbsorb() {
-      const gen = ++absorbGen;
-      clearTimeout(absorbTimer);
-      const btn = document.getElementById('absorb-btn');
-      btn.disabled = true;
-      const off = kOffset();
-      absorbState = { e: [0, Ev0], photon: null, phonon: null };
-      renderBandgap();
-      setGapMsg('Photon incident: vertical transition, Δk ≈ 0, energy Eg = Ec0 − Ev0.');
-
-      await slideElectron([0, Ev0], [0, Ec0], 520, (t) => {
-        absorbState.photon = [0, lerp(Ev0, Ec0, t), 0, Ev0];
-      });
-      if (gen !== absorbGen) return;
-
-      if (gapMode === 'direct') {
-        setGapMsg('Transition Successful! Fast & efficient. The photon lands on the conduction-band minimum (same k).', 'status-ok');
-      } else {
-        setGapMsg('The photon hits a forbidden gap state at k = 0 — that is not the Si CB minimum.');
-        await sleep(280);
-        if (gen !== absorbGen) return;
-        await slideElectron([0, Ec0], [off, Ec0], 640, (t) => {
-          absorbState.phonon = [lerp(0, off, t), Ec0, 0, Ec0];
-        });
-        if (gen !== absorbGen) return;
-        setGapMsg('Phonon Required to Conserve Momentum! Slow transition, energy lost as heat.', 'status-warn');
-      }
-      btn.disabled = false;
-    }
-
-    function initBandgap() {
-      if (!inited.bandgap) {
-        document.querySelectorAll('.gap-mode').forEach((b) => {
-          b.addEventListener('click', () => {
-            gapMode = b.dataset.gap;
-            document.querySelectorAll('.gap-mode').forEach((x) => {
-              x.classList.remove('bg-electron', 'text-white');
-              x.classList.add('text-slate-300');
-            });
-            b.classList.add('bg-electron', 'text-white');
-            b.classList.remove('text-slate-300');
-            resetAbsorb();
-          });
-        });
-        document.getElementById('absorb-btn').addEventListener('click', runAbsorb);
-        document.getElementById('reset-absorb').addEventListener('click', resetAbsorb);
-        inited.bandgap = true;
-      }
-      resetAbsorb();
-    }
-
-    /* ========== SIM 5: Fermi ========== */
-    const EvF = 0;
-    const EcF = 1.12;
-    const Ei = 0.56;
-
-    function fermi(E, EF, T) {
-      const x = (E - EF) / (kB * T);
-      if (x > 80) return 0;
-      if (x < -80) return 1;
-      return 1 / (1 + Math.exp(x));
-    }
-
-    function Nc(E) { return E > EcF ? Math.sqrt(E - EcF) : 0; }
-    function Nv(E) { return E < EvF ? Math.sqrt(EvF - E) : 0; }
-
-    function trapz(y, dx) {
-      let s = 0;
-      for (let i = 1; i < y.length; i++) s += 0.5 * (y[i] + y[i - 1]) * dx;
-      return s;
-    }
-
-    function energyAxisLayout(xtitle, xrange) {
-      return baseLayout({
-        margin: { l: 52, r: 12, t: 20, b: 46 },
-        showlegend: false,
-        xaxis: { title: xtitle, gridcolor: '#1e293b', zeroline: false, range: xrange },
-        yaxis: { title: 'Energy E (eV)', gridcolor: '#1e293b', zeroline: false, range: [-1.15, 2.25] },
-      });
-    }
-
-    function bandShapes(EF) {
-      return [
-        { type: 'rect', xref: 'paper', x0: 0, x1: 1, y0: EvF, y1: EcF, fillcolor: 'rgba(15,23,42,0.35)', line: { width: 0 } },
-        { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: EcF, y1: EcF, line: { color: '#38bdf8', width: 1.4, dash: 'dash' } },
-        { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: EvF, y1: EvF, line: { color: '#f87171', width: 1.4, dash: 'dash' } },
-        { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: EF, y1: EF, line: { color: '#fbbf24', width: 2 } },
-      ];
-    }
-
-    function renderFermi() {
-      const T = Number(document.getElementById('fermi-t').value);
-      const d = Number(document.getElementById('fermi-d').value);
-      document.getElementById('fermi-t-label').textContent = T + ' K';
-
-      const EF = Ei + d * 0.52;
-      let dtype = 'Intrinsic';
-      let dclass = 'text-amber-300';
-      if (d > 0.12) { dtype = 'N-type · EF → Ec'; dclass = 'text-sky-300'; }
-      else if (d < -0.12) { dtype = 'P-type · EF → Ev'; dclass = 'text-red-300'; }
-      const lab = document.getElementById('fermi-d-label');
-      lab.textContent = dtype;
-      lab.className = 'font-mono ' + dclass;
-
-      const E = linspace(-1.1, 2.2, 500);
-      const dx = E[1] - E[0];
-      const nc = E.map(Nc);
-      const nv = E.map(Nv);
-      const f = E.map((e) => fermi(e, EF, T));
-      const nf = E.map((e, i) => nc[i] * f[i]);
-      const pf = E.map((e, i) => nv[i] * (1 - f[i]));
-
-      document.getElementById('fermi-ef').textContent = EF.toFixed(3) + ' eV';
-      document.getElementById('fermi-n').textContent = trapz(nf, dx).toExponential(2);
-      document.getElementById('fermi-p').textContent = trapz(pf, dx).toExponential(2);
-
-      const annot = (text, y, color) => ({ x: 1, y, xref: 'paper', xanchor: 'right', text, showarrow: false, font: { color, size: 10 } });
-
-      const dosLayout = energyAxisLayout('N(E) (arb.)', [0, 1.35]);
-      dosLayout.shapes = bandShapes(EF);
-      dosLayout.annotations = [annot('Ec', EcF + 0.08, '#7dd3fc'), annot('Ev', EvF - 0.12, '#fca5a5'), annot('EF', EF + 0.08, '#fde68a')];
-
-      const fdLayout = energyAxisLayout('f(E)', [-0.05, 1.08]);
-      fdLayout.shapes = bandShapes(EF);
-
-      const npLayout = energyAxisLayout('occupation × DOS', [0, 0.55]);
-      npLayout.shapes = bandShapes(EF);
-      npLayout.showlegend = true;
-      npLayout.legend = { orientation: 'h', y: 1.12, font: { size: 10 } };
-
-      Plotly.react('plot-dos', [
-        { x: nc, y: E, name: 'Nc', fill: 'tozerox', fillcolor: 'rgba(2,132,199,0.25)', line: { color: '#38bdf8', width: 2 } },
-        { x: nv, y: E, name: 'Nv', fill: 'tozerox', fillcolor: 'rgba(153,27,27,0.28)', line: { color: '#f87171', width: 2 } },
-      ], dosLayout, { responsive: true, displaylogo: false });
-
-      Plotly.react('plot-fd', [
-        { x: f, y: E, name: 'f(E)', line: { color: '#fbbf24', width: 2.8 } },
-      ], fdLayout, { responsive: true, displaylogo: false });
-
-      Plotly.react('plot-np', [
-        { x: nf, y: E, name: 'n(E) = Nc f', fill: 'tozerox', fillcolor: 'rgba(2,132,199,0.45)', line: { color: '#38bdf8', width: 2 } },
-        { x: pf, y: E, name: 'p(E) = Nv (1−f)', fill: 'tozerox', fillcolor: 'rgba(153,27,27,0.5)', line: { color: '#e11d48', width: 2 } },
-      ], npLayout, { responsive: true, displaylogo: false });
-    }
-
-    function initFermi() {
-      if (!inited.fermi) {
-        document.getElementById('fermi-t').addEventListener('input', renderFermi);
-        document.getElementById('fermi-d').addEventListener('input', renderFermi);
-        document.getElementById('fermi-sweep').addEventListener('click', sweepFermi);
-        inited.fermi = true;
-      }
-      renderFermi();
-    }
-
-    function sweepFermi() {
-      if (reduceMotion) return;
-      cancelAnimationFrame(fermiSweepRaf);
-      const slider = document.getElementById('fermi-d');
-      let d = -1;
-      slider.value = String(d);
-      renderFermi();
-      const start = performance.now();
-      function step(ts) {
-        if (activeSim !== 'fermi') return;
-        const t = Math.min(1, (ts - start) / 4200);
-        d = -1 + 2 * t;
-        slider.value = d.toFixed(2);
-        renderFermi();
-        if (t < 1) fermiSweepRaf = requestAnimationFrame(step);
-      }
-      fermiSweepRaf = requestAnimationFrame(step);
-    }
-  </script>
+  <script src="js/portal.js"></script>
+  <script src="js/sims/diode.js"></script>
+  <script src="js/lab-state.js"></script>
+  <script src="js/sims/lab.js"></script>
 </body>
 </html>
