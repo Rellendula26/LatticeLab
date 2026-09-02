@@ -17,6 +17,35 @@
     const catalogView = document.getElementById('catalog-view');
     const workspaceView = document.getElementById('workspace-view');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    (function bootIntro() {
+      const splash = document.getElementById('intro-splash');
+      if (!splash) {
+        document.body.classList.remove('intro-lock');
+        return;
+      }
+      let done = false;
+      const go = function () {
+        if (done) return;
+        done = true;
+        splash.classList.add('is-gone');
+        document.body.classList.remove('intro-lock');
+        setTimeout(function () { splash.remove(); }, 320);
+      };
+      if (reduceMotion) {
+        go();
+        return;
+      }
+      splash.addEventListener('click', go);
+      document.addEventListener('keydown', function onKey(e) {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          document.removeEventListener('keydown', onKey);
+          go();
+        }
+      });
+      setTimeout(go, 1680);
+    })();
     const inited = {};
     let activeSim = null;
     let absorbTimer = 0;
