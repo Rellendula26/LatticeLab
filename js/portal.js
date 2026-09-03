@@ -12,6 +12,7 @@
       led: 'Photonics',
       diode: 'Devices',
       lab: 'Core Concepts',
+      ek: 'Band Dynamics',
     };
 
     const catalogView = document.getElementById('catalog-view');
@@ -96,6 +97,7 @@
       ledAnim = null;
       if (typeof stopDiode === 'function') stopDiode();
       if (typeof stopLab === 'function') stopLab();
+      if (typeof stopEkMomentum === 'function') stopEkMomentum();
     }
 
     function launch(id) {
@@ -112,6 +114,7 @@
         document.querySelectorAll('.sim-panel').forEach((p) => p.classList.add('hidden'));
         document.getElementById('panel-' + id).classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (id === 'ek' && typeof initEkMomentum === 'function') initEkMomentum();
         requestAnimationFrame(() => {
           if (id === 'lattice') initLattice();
           if (id === 'density') initDensity();
@@ -121,6 +124,7 @@
           if (id === 'led') initLed();
           if (id === 'diode') initDiode();
           if (id === 'lab') initLab();
+          if (id === 'ek') initEkMomentum();
           resizeVisible();
         });
       }, 260);

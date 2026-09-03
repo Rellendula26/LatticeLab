@@ -239,7 +239,19 @@
                 <button type="button" class="launch-btn mt-5 w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white" data-launch="bandgap">Launch Simulation</button>
               </article>
 
-              <article class="glass-card flex flex-col rounded-2xl p-5 sm:col-span-2 xl:col-span-1">
+              <article class="glass-card flex flex-col rounded-2xl p-5">
+                <div class="mb-4 flex items-start justify-between gap-3">
+                  <div class="grid h-12 w-12 place-items-center rounded-xl bg-electron/15 text-sky-300">
+                    <i class="fa-solid fa-chart-line text-xl"></i>
+                  </div>
+                  <span class="badge rounded-full border border-sky-400/25 bg-sky-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase text-sky-200">Band Dynamics</span>
+                </div>
+                <h3 class="text-lg font-semibold text-white">Momentum, Velocity &amp; Effective Mass</h3>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-400">Move an electron along E(k). Slope becomes group velocity, curvature becomes m*, and an electric field changes k — not the electron’s address in the silicon.</p>
+                <button type="button" class="launch-btn mt-5 w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white" data-launch="ek">Launch Simulation</button>
+              </article>
+
+              <article class="glass-card flex flex-col rounded-2xl p-5">
                 <div class="mb-4 flex items-start justify-between gap-3">
                   <div class="grid h-12 w-12 place-items-center rounded-xl bg-electron/15 text-sky-300">
                     <i class="fa-solid fa-chart-area text-xl"></i>
@@ -249,6 +261,7 @@
                 <h3 class="text-lg font-semibold text-white">Carrier Statistics &amp; Fermi Shift</h3>
                 <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-400">Density of states, Fermi–Dirac occupancy, and n(E)/p(E) products. Temperature smears f(E); doping slides E<sub>F</sub> and grows the electron or hole population (slides 24–26).</p>
                 <button type="button" class="launch-btn mt-5 w-full cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white" data-launch="fermi">Launch Simulation</button>
+                <a href="fermi_visualizer.html" class="mt-2 inline-flex w-full items-center justify-center rounded-xl border border-sky-400/25 px-4 py-2 text-xs font-semibold text-sky-200 hover:bg-sky-400/10">Open Fermi Level Visualizer · N<sub>d</sub>, N<sub>a</sub>, T</a>
               </article>
             </div>
           </div>
@@ -499,6 +512,188 @@
           <div id="plot-bandgap" class="js-plot" style="min-height: 480px;"></div>
         </div>
         <p class="takeaway">A photon can pay the energy bill. It cannot change the electron’s crystal momentum. Silicon has to borrow that Δk from a vibrating lattice.</p>
+      </div>
+
+      <!-- SIM: E–k momentum / velocity / m* -->
+      <div id="panel-ek" class="sim-panel hidden fade-view">
+        <div class="mb-5">
+          <h2 class="text-2xl font-bold text-white sm:text-3xl">Momentum, Velocity &amp; Effective Mass</h2>
+          <p class="mt-2 max-w-3xl text-slate-400">The large plot is <span class="text-slate-200">k-space</span>: a map of allowed energy versus crystal momentum. The strip below is <span class="text-slate-200">real space</span>. Normalized units (ħ = 1, |q| = 1) — the algebra is ready for later Si numbers.</p>
+        </div>
+
+        <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div class="glass flex flex-wrap gap-2 rounded-2xl p-2">
+            <button type="button" data-ek-mode="free" class="cursor-pointer rounded-xl bg-electron px-4 py-2 text-sm font-semibold text-white">Free exploration</button>
+            <button type="button" data-ek-mode="guided" class="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/5">Guided learning</button>
+          </div>
+          <div class="glass flex flex-wrap gap-2 rounded-2xl p-2">
+            <button type="button" data-ek-view="electron" class="cursor-pointer rounded-xl bg-electron px-3 py-2 text-xs font-semibold text-white">Conduction electron</button>
+            <button type="button" data-ek-view="compare" class="cursor-pointer rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5">Compare m*</button>
+            <button type="button" data-ek-view="holes" class="cursor-pointer rounded-xl px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5">Light / heavy holes</button>
+          </div>
+        </div>
+
+        <div id="ek-guide" class="glass mb-4 hidden rounded-2xl p-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <p id="ek-guide-step" class="text-xs font-semibold uppercase tracking-[0.16em] text-sky-300">Step 1 of 8</p>
+            <div id="ek-guide-dots" class="flex gap-1.5" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <h3 id="ek-guide-title" class="mt-2 text-lg font-semibold text-white"></h3>
+          <p id="ek-guide-body" class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300"></p>
+          <p id="ek-guide-tip" class="mt-2 text-sm text-amber-200/90"></p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button type="button" id="ek-guide-back" class="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/5">Back</button>
+            <button type="button" id="ek-guide-next" class="launch-btn cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-white">Next</button>
+          </div>
+        </div>
+
+        <p id="ek-why" class="why-box mb-4 rounded-r-xl px-4 py-3 text-sm leading-relaxed text-slate-200">k is crystal momentum, not a coordinate in the chip.</p>
+        <p id="ek-free-hint" class="mb-4 text-xs leading-relaxed text-slate-500">Drag the electron across the band, or use the k slider. The vertical dashed line is a guide to the k-axis — it is not a position in the crystal.</p>
+
+        <div class="glass mb-4 grid gap-4 rounded-2xl p-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div class="flex flex-wrap items-end gap-2">
+            <button type="button" id="ek-play" class="launch-btn cursor-pointer rounded-xl px-4 py-2.5 text-sm font-semibold text-white"><i class="fa-solid fa-pause mr-2"></i>Pause</button>
+            <button type="button" id="ek-reset" class="cursor-pointer rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5">Reset</button>
+            <button type="button" id="ek-field-btn" class="ek-field-btn cursor-pointer rounded-xl border border-amber-300/30 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-100 hover:bg-amber-400/20"><i class="fa-solid fa-bolt mr-2"></i>Apply Electric Field</button>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="inline-flex items-center gap-1.5 font-medium text-slate-300">Crystal momentum / k
+                <button type="button" class="ek-tip" aria-label="About k">?<span class="ek-tip-pop">k is the electron’s crystal-momentum state, p = ħk. It is not a coordinate x inside the silicon.</span></button>
+              </span>
+              <span id="ek-k-lab" class="font-mono text-sky-300">+0.00</span>
+            </div>
+            <input id="ek-k" type="range" min="-1.65" max="1.65" step="0.01" value="0" class="mt-2 w-full" />
+            <div class="mt-1 flex justify-between text-[11px] uppercase tracking-wider text-slate-500"><span>−k</span><span>k = 0</span><span>+k</span></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="font-medium text-slate-300">Electric field magnitude</span>
+              <span id="ek-efield-lab" class="font-mono text-amber-200">0.65</span>
+            </div>
+            <input id="ek-efield" type="range" min="0.15" max="1.4" step="0.01" value="0.65" class="mt-2 w-full" />
+            <p class="mt-1 text-[11px] text-slate-500">ħ dk/dt = F = ∓qE. m* is not in this equation.</p>
+          </div>
+          <div id="ek-curve-wrap">
+            <div class="flex items-center justify-between text-sm">
+              <span class="inline-flex items-center gap-1.5 font-medium text-slate-300">Band curvature
+                <button type="button" class="ek-tip" aria-label="About curvature">?<span class="ek-tip-pop">Sharper (narrow) parabola → larger d²E/dk² → smaller m*. Flatter band → heavier response. The rest mass did not change.</span></button>
+              </span>
+              <span id="ek-curve-lab" class="font-mono text-sky-300">1.00</span>
+            </div>
+            <input id="ek-curve" type="range" min="0.35" max="2.40" step="0.01" value="1" class="mt-2 w-full" />
+            <div class="mt-1 flex justify-between text-[11px] uppercase tracking-wider text-slate-500"><span>wide / heavy</span><span>narrow / light</span></div>
+          </div>
+        </div>
+
+        <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-slate-300">
+          <label class="inline-flex cursor-pointer items-center gap-2"><input id="ek-tog-tan" type="checkbox" checked class="accent-sky-400" /> Tangent line</label>
+          <label class="inline-flex cursor-pointer items-center gap-2"><input id="ek-tog-vel" type="checkbox" checked class="accent-sky-400" /> Velocity vector</label>
+          <label class="inline-flex cursor-pointer items-center gap-2"><input id="ek-tog-real" type="checkbox" checked class="accent-sky-400" /> Real-space comparison</label>
+        </div>
+
+        <div class="mb-4 grid gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
+          <div class="space-y-4">
+            <div id="ek-view-single" class="glass overflow-hidden rounded-2xl p-2">
+              <svg id="ek-svg" viewBox="0 0 760 500" role="img" aria-label="Energy versus crystal momentum with a movable conduction electron"></svg>
+            </div>
+            <div id="ek-view-compare" class="hidden grid gap-4 md:grid-cols-2">
+              <div class="glass overflow-hidden rounded-2xl p-2">
+                <svg id="ek-svg-a" viewBox="0 0 380 420" role="img" aria-label="Light effective mass conduction band"></svg>
+              </div>
+              <div class="glass overflow-hidden rounded-2xl p-2">
+                <svg id="ek-svg-b" viewBox="0 0 380 420" role="img" aria-label="Heavy effective mass conduction band"></svg>
+              </div>
+            </div>
+            <div id="ek-view-holes" class="glass hidden overflow-hidden rounded-2xl p-2">
+              <svg id="ek-svg-h" viewBox="0 0 760 500" role="img" aria-label="Light-hole and heavy-hole valence bands"></svg>
+            </div>
+            <p id="ek-v-note" class="rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3 text-sm text-slate-300">v = (1/ħ) dE/dk. The tangent is the whole story.</p>
+            <p id="ek-edge" class="status-warn hidden rounded-xl border px-4 py-3 text-sm">k reached the edge of this plot. In a real crystal a Brillouin-zone boundary can Bragg-scatter the state; we stop here so the parabola stays honest.</p>
+            <p id="ek-rest-mass" class="hidden rounded-xl border border-sky-400/25 bg-sky-400/10 px-4 py-3 text-sm text-sky-100">The electron’s actual rest mass has not changed. The crystal band structure makes it respond to force as though it has a different mass.</p>
+
+            <div id="ek-real-wrap" class="glass rounded-2xl p-4">
+              <div class="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wider text-amber-200/90">Real space — not the E–k plot</p>
+                  <p class="mt-1 text-xs leading-relaxed text-slate-500">The packet drifts at the group velocity. Wrapping the strip is periodic boundary dressing, not a new k-state.</p>
+                </div>
+                <button type="button" class="ek-tip" aria-label="k-space versus real space">?<span class="ek-tip-pop">The E–k dot moving left/right is a changing quantum number k. This strip is the only place that shows the electron’s physical drift.</span></button>
+              </div>
+              <div id="ek-tracks"></div>
+            </div>
+          </div>
+
+          <aside class="space-y-4">
+            <div class="glass rounded-2xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Watch out</p>
+              <ul class="mt-3 space-y-3 text-sm leading-relaxed text-slate-400">
+                <li class="flex gap-2"><button type="button" class="ek-tip mt-0.5 shrink-0" aria-label="k is not position">?<span class="ek-tip-pop">k labels a Bloch state. x is where the wave packet sits in the lattice.</span></button><span><span class="text-slate-200">k is not position.</span> Horizontal on E–k is crystal momentum.</span></li>
+                <li class="flex gap-2"><button type="button" class="ek-tip mt-0.5 shrink-0" aria-label="Not rolling">?<span class="ek-tip-pop">Energy is the vertical axis of a state map. Gravity is not running this cartoon.</span></button><span>The electron is <span class="text-slate-200">not rolling downhill</span> on the band.</span></li>
+                <li class="flex gap-2"><button type="button" class="ek-tip mt-0.5 shrink-0" aria-label="Rest mass">?<span class="ek-tip-pop">m* absorbs the lattice’s effect on acceleration. m_e is still m_e.</span></button><span><span class="text-slate-200">m*</span> is a response, not a new rest mass.</span></li>
+                <li class="flex gap-2"><button type="button" class="ek-tip mt-0.5 shrink-0" aria-label="Conduction band velocity">?<span class="ek-tip-pop">At the band minimum the slope is zero, so the group velocity is zero.</span></button><span>Conduction-band occupancy <span class="text-slate-200">does not mean high velocity</span>.</span></li>
+              </ul>
+            </div>
+            <div class="glass rounded-2xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Why momentum matters</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-400">A field changes k. Band location sets the slope (velocity) and the curvature (how easily that velocity changes). That is how band structure controls current.</p>
+            </div>
+            <div class="glass rounded-2xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Conceptual chain</p>
+              <div id="ek-concept-chain" class="ek-chain mt-3"></div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="mt-5 mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500">k</p>
+            <p id="ek-q-k" class="font-mono text-lg text-sky-200">+0.00</p>
+          </div>
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500">p = ħk</p>
+            <p id="ek-q-p" class="font-mono text-lg text-white">+0.00</p>
+          </div>
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500">dE/dk</p>
+            <p id="ek-q-slope" class="font-mono text-lg text-amber-200">+0.00</p>
+          </div>
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500">v = (1/ħ) dE/dk</p>
+            <p id="ek-q-v" class="font-mono text-lg text-sky-300">+0.00</p>
+          </div>
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500">d²E/dk²</p>
+            <p id="ek-q-curv" class="font-mono text-lg text-slate-100">1.00</p>
+          </div>
+          <div class="ek-qty glass rounded-xl px-3 py-3">
+            <p class="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider text-slate-500">m* = ħ²/(d²E/dk²)
+              <button type="button" class="ek-tip" aria-label="About effective mass">?<span class="ek-tip-pop">m* is how the crystal makes a carrier respond to force. The electron’s rest mass is unchanged.</span></button>
+            </p>
+            <p id="ek-q-m" class="font-mono text-lg text-white">1.00</p>
+          </div>
+        </div>
+
+        <p id="ek-live-eq" class="mb-4 font-mono text-xs leading-relaxed text-slate-400"></p>
+
+        <div class="glass mb-4 rounded-2xl p-3">
+          <p class="px-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Field → force → Δk → slope → velocity</p>
+          <div id="ek-force-chain" class="ek-fchain px-2 pb-1">
+            <span data-f="0">Electric field E</span>
+            <span class="text-slate-600">→</span>
+            <span data-f="1">F = ∓qE</span>
+            <span class="text-slate-600">→</span>
+            <span data-f="2">ħ dk/dt = F</span>
+            <span class="text-slate-600">→</span>
+            <span data-f="3">dE/dk changes</span>
+            <span class="text-slate-600">→</span>
+            <span data-f="4">v changes</span>
+          </div>
+        </div>
+
+        <p class="takeaway">Because an electric field changes the carrier’s crystal momentum k. Location in k-space sets the band slope (velocity) and the curvature (how easily that velocity changes). Band structure is therefore what decides how carriers accelerate and conduct current.</p>
       </div>
 
       <!-- SIM 5 -->
@@ -980,5 +1175,7 @@
   <script src="js/sims/diode.js"></script>
   <script src="js/lab-state.js"></script>
   <script src="js/sims/lab.js"></script>
+  <script src="js/physics/ek-bands.js"></script>
+  <script src="js/sims/ek-momentum.js"></script>
 </body>
 </html>
