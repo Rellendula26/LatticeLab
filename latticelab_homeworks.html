@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homework Visualizer Portal · LatticeLab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { navy: '#0f172a', crimson: '#991b1b', electron: '#0284c7' },
+          fontFamily: {
+            sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+            serif: ['IBM Plex Serif', 'Georgia', 'serif'],
+            mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/homework-portal.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body class="font-sans antialiased">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-electron/10 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div class="absolute bottom-10 left-0 h-64 w-64 rounded-full bg-crimson/10 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-sky-400/10">
+    <div class="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="index.html" class="back-btn inline-flex items-center gap-2 rounded-xl border border-sky-400/20 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-sky-100">
+          <i class="fa-solid fa-arrow-left"></i> Catalog
+        </a>
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-300/80">ESE 2180 · Homework studio</p>
+          <h1 class="text-xl font-bold tracking-tight text-white sm:text-2xl">LatticeLab Homework Visualizer</h1>
+        </div>
+      </div>
+      <p class="font-mono text-[11px] text-slate-500">Dark studio · Three.js · Plotly · KaTeX</p>
+    </div>
+  </header>
+
+  <div class="relative z-10 mx-auto grid max-w-[1500px] hw-shell gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
+    <aside class="hw-sidebar border-b border-sky-400/10 p-4 lg:border-b-0 lg:border-r lg:p-5">
+      <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Homework sets</p>
+      <div class="mt-3 space-y-2">
+        <button type="button" data-hw="hw1" class="hw-nav-btn is-on flex w-full flex-col rounded-xl border border-sky-400/20 px-3 py-3 text-left">
+          <span class="text-xs font-semibold text-emerald-300">Live</span>
+          <span class="text-sm font-semibold text-white">Homework 1</span>
+          <span class="mt-0.5 text-[11px] leading-snug text-slate-400">Crystallography &amp; Carrier Statistics</span>
+        </button>
+        <button type="button" data-hw="hw2" class="hw-nav-btn is-soon flex w-full flex-col rounded-xl border border-white/10 px-3 py-3 text-left">
+          <span class="text-xs font-semibold text-slate-500">Placeholder</span>
+          <span class="text-sm font-semibold text-slate-200">Homework 2</span>
+          <span class="mt-0.5 text-[11px] text-slate-500">Reserved for the next set</span>
+        </button>
+        <button type="button" data-hw="hw3" class="hw-nav-btn is-soon flex w-full flex-col rounded-xl border border-white/10 px-3 py-3 text-left">
+          <span class="text-xs font-semibold text-slate-500">Placeholder</span>
+          <span class="text-sm font-semibold text-slate-200">Homework 3</span>
+          <span class="mt-0.5 text-[11px] text-slate-500">Reserved for the next set</span>
+        </button>
+      </div>
+
+      <div class="mt-6">
+        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Homework 1 tabs</p>
+        <div class="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-1" role="tablist">
+          <button type="button" data-tab="cell" class="hw-tab is-on rounded-xl border border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-slate-200" aria-selected="true">
+            <i class="fa-solid fa-cube mr-2 text-sky-300"></i>Q1 · Unit cell
+          </button>
+          <button type="button" data-tab="miller" class="hw-tab rounded-xl border border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-slate-200">
+            <i class="fa-solid fa-draw-polygon mr-2 text-amber-300"></i>Q2 · Miller
+          </button>
+          <button type="button" data-tab="ek" class="hw-tab rounded-xl border border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-slate-200">
+            <i class="fa-solid fa-bolt mr-2 text-cyan-300"></i>Q3–4 · Si &amp; E–k
+          </button>
+          <button type="button" data-tab="fermi" class="hw-tab rounded-xl border border-white/10 px-3 py-2.5 text-left text-xs font-semibold text-slate-200">
+            <i class="fa-solid fa-chart-area mr-2 text-orange-300"></i>Q5 · Fermi–Dirac
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-8 hidden rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[11px] leading-relaxed text-slate-400 lg:block">
+        <p class="font-semibold text-slate-300">How to read this studio</p>
+        <p class="mt-2">Cyan / emerald = electrons and the conduction band. Crimson / orange = holes and the valence band. Amber = Fermi level and photons.</p>
+        <p class="mt-2">Drag the 3D cells. Hover atoms, intercepts, and axes for the ownership and intercept rules.</p>
+      </div>
+    </aside>
+
+    <main class="hw-main p-4 sm:p-6">
+      <section id="hw-soon" class="hidden fade-view">
+        <div class="glass mx-auto max-w-xl rounded-2xl p-8 text-center">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Not wired yet</p>
+          <h2 id="hw-soon-title" class="mt-2 text-2xl font-semibold text-white">Homework 2</h2>
+          <p id="hw-soon-blurb" class="mt-2 text-sm text-slate-400">This slot is reserved so later problem sets can drop in without a redesign.</p>
+        </div>
+      </section>
+
+      <section id="hw-live">
+        <!-- TAB 1 -->
+        <article data-panel="cell" class="fade-view">
+          <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300/80">Q1 · Conventional cell</p>
+              <h2 class="text-2xl font-semibold text-white">3D Unit Cell &amp; Atom Counter</h2>
+              <p class="mt-1 max-w-2xl text-sm text-slate-400">Toggle the Bravais type. Fractional cuts slice atoms on the cell boundary so you can <em>see</em> ⅛, ½, and 1.</p>
+            </div>
+            <button type="button" id="cell-reset" class="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-slate-300">Reset view</button>
+          </div>
+          <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+            <div id="cell-mount" class="hw-viewport border border-sky-400/15">
+              <div id="cell-tip" class="hw-tip hidden"></div>
+            </div>
+            <div class="space-y-4">
+              <div class="glass-card rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Structure</p>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                  <button type="button" data-lat="sc" class="hw-lat rounded-lg border border-white/10 px-2 py-2 text-xs font-semibold text-slate-200">SC</button>
+                  <button type="button" data-lat="bcc" class="hw-lat rounded-lg border border-white/10 px-2 py-2 text-xs font-semibold text-slate-200">BCC</button>
+                  <button type="button" data-lat="fcc" class="hw-lat is-on rounded-lg border border-white/10 px-2 py-2 text-xs font-semibold text-slate-200">FCC</button>
+                  <button type="button" data-lat="diamond" class="hw-lat rounded-lg border border-white/10 px-2 py-2 text-xs font-semibold text-slate-200">Diamond (Si)</button>
+                </div>
+                <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm text-slate-200">
+                  <input id="cell-cuts" type="checkbox" class="accent-emerald-400" />
+                  Show Fractional Cuts
+                </label>
+                <p class="mt-2 text-[11px] text-slate-500">Cuts clip every atom against the six faces of this cell. Wireframes are the pieces owned by neighbors.</p>
+              </div>
+              <div class="glass rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300/80">Live count</p>
+                <div id="cell-formula" class="hw-formula eq mt-2 text-sky-100"></div>
+                <p id="cell-note" class="mt-2 text-xs leading-relaxed text-slate-400"></p>
+                <ul class="mt-3 space-y-1 text-[11px] text-slate-500">
+                  <li><span class="inline-block h-2 w-2 rounded-full bg-slate-100"></span> corners · 1/8</li>
+                  <li><span class="inline-block h-2 w-2 rounded-full bg-sky-400"></span> faces · 1/2</li>
+                  <li><span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span> body · 1</li>
+                  <li><span class="inline-block h-2 w-2 rounded-full bg-red-400"></span> diamond internals · 1</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 2 -->
+        <article data-panel="miller" class="fade-view hidden">
+          <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300/80">Q2 · Intercepts &amp; arrows</p>
+              <h2 class="text-2xl font-semibold text-white">Miller Indices 3D Sketcher</h2>
+              <p class="mt-1 max-w-2xl text-sm text-slate-400">x forward, y right, z up. Planes from reciprocal intercepts; directions scale and shift so they stay inside the box.</p>
+            </div>
+            <button type="button" id="miller-reset" class="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-slate-300">Reset view</button>
+          </div>
+          <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <div id="miller-mount" class="hw-viewport border border-amber-300/15">
+              <div id="miller-tip" class="hw-tip hidden"></div>
+            </div>
+            <div class="space-y-4">
+              <div class="glass-card rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Plane (hkl)</p>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <label class="text-[11px] text-slate-400">h <input id="m-h" type="number" step="1" value="2" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                  <label class="text-[11px] text-slate-400">k <input id="m-k" type="number" step="1" value="1" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                  <label class="text-[11px] text-slate-400">l <input id="m-l" type="number" step="1" value="0" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                </div>
+                <div id="plane-presets" class="mt-3 flex flex-wrap gap-1.5"></div>
+                <label class="mt-3 flex items-center gap-2 text-xs text-slate-300">
+                  <input id="m-show-plane" type="checkbox" checked class="accent-amber-400" /> Draw plane
+                </label>
+                <div id="miller-plane-eq" class="eq mt-3 text-sm text-amber-100"></div>
+              </div>
+              <div class="glass-card rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Direction [uvw]</p>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <label class="text-[11px] text-slate-400">u <input id="m-u" type="number" step="1" value="3" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                  <label class="text-[11px] text-slate-400">v <input id="m-v" type="number" step="1" value="2" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                  <label class="text-[11px] text-slate-400">w <input id="m-w" type="number" step="1" value="0" class="field js-num ml-1 rounded-md px-2 py-1 text-sm text-white" /></label>
+                </div>
+                <div id="dir-presets" class="mt-3 flex flex-wrap gap-1.5"></div>
+                <label class="mt-3 flex items-center gap-2 text-xs text-slate-300">
+                  <input id="m-show-dir" type="checkbox" checked class="accent-cyan-400" /> Draw direction
+                </label>
+                <div id="miller-dir-eq" class="eq mt-3 text-sm text-cyan-100"></div>
+              </div>
+              <div class="glass rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Paste any triple</p>
+                <div class="mt-2 flex gap-2">
+                  <select id="m-paste-kind" class="field rounded-md px-2 py-1 text-xs text-white">
+                    <option value="plane">Plane</option>
+                    <option value="dir">Direction</option>
+                  </select>
+                  <input id="m-paste" class="field flex-1 rounded-md px-2 py-1 text-xs text-white" placeholder="(210) or [0 1 -2]" />
+                </div>
+                <p id="miller-scale-note" class="mt-3 text-xs leading-relaxed text-slate-400"></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 3 -->
+        <article data-panel="ek" class="fade-view hidden">
+          <div class="mb-4">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300/80">Q3 &amp; Q4 · Density then transitions</p>
+            <h2 class="text-2xl font-semibold text-white">Silicon Calculator &amp; E–k Simulator</h2>
+            <p class="mt-1 max-w-3xl text-sm text-slate-400">Part A is the conventional-cell count you already sketched. Part B is why Si needs a phonon and GaAs does not.</p>
+          </div>
+          <div class="grid gap-4 lg:grid-cols-2">
+            <div class="glass-card rounded-2xl p-5">
+              <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Part A · Si atomic density</p>
+              <label class="mt-4 block text-sm text-slate-300">
+                Lattice constant a
+                <span id="si-a-lab" class="float-right font-mono text-cyan-300">5.431 Å</span>
+                <input id="si-a" type="range" min="5.20" max="5.70" step="0.001" value="5.431" class="mt-2 w-full" />
+              </label>
+              <div id="si-vol-eq" class="hw-formula eq mt-4 text-sky-100"></div>
+              <p id="si-vol-note" class="text-xs text-slate-500"></p>
+              <div id="si-dens-eq" class="hw-formula eq mt-3 text-emerald-100"></div>
+              <p id="si-dens-note" class="text-xs text-slate-500"></p>
+            </div>
+            <div class="glass rounded-2xl p-5">
+              <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Conservation reminder</p>
+              <p class="mt-3 text-sm leading-relaxed text-slate-300">A photon is nearly vertical in this plot: large ΔE, tiny Δk. A phonon is nearly horizontal: small ΔE, large Δk. Silicon’s conduction-band minimum is near X, so both are required.</p>
+              <p class="mt-3 text-sm leading-relaxed text-slate-400">These E(k) curves are teaching parabolas, not DFT. Heights match the usual textbook gaps (Si 1.12 eV, GaAs 1.42 eV) and the Γ–X offset.</p>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" id="ek-excite" class="launch-btn rounded-xl px-4 py-2.5 text-sm font-semibold text-white">
+              <i class="fa-solid fa-bolt mr-2"></i>Excite Electron
+            </button>
+            <button type="button" id="ek-reset" class="rounded-xl border border-white/15 px-4 py-2.5 text-sm text-slate-200">Reset carriers</button>
+          </div>
+          <p id="ek-status" class="mt-3 text-sm text-slate-400">Electron sits at the valence-band maximum (k = 0). Press Excite to conserve energy — and, in Si, crystal momentum.</p>
+          <div class="mt-4 grid gap-4 lg:grid-cols-2">
+            <div class="glass rounded-2xl p-2">
+              <div id="ek-si" class="hw-plot"></div>
+            </div>
+            <div class="glass rounded-2xl p-2">
+              <div id="ek-gaas" class="hw-plot"></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 4 -->
+        <article data-panel="fermi" class="fade-view hidden">
+          <div class="mb-4">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-300/80">Q5 · Occupancy</p>
+            <h2 class="text-2xl font-semibold text-white">Dynamic Fermi–Dirac Distribution</h2>
+            <p class="mt-1 max-w-3xl text-sm text-slate-400">f(E) on the horizontal axis, energy vertical — the same orientation as a band diagram. The amber pivot is always f = ½.</p>
+          </div>
+          <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_240px]">
+            <div class="glass rounded-2xl p-3">
+              <div class="flex flex-wrap items-end justify-between gap-4 px-2 pt-2">
+                <label class="min-w-[220px] flex-1 text-sm text-slate-300">
+                  Temperature
+                  <span id="fd-t-lab" class="float-right font-mono text-amber-200">300 K</span>
+                  <input id="fd-t" type="range" min="0" max="800" step="1" value="300" class="mt-2 w-full" />
+                </label>
+                <div id="fd-dop" class="flex flex-wrap gap-1.5">
+                  <button type="button" data-dop="i" class="hw-dop is-on rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold">Intrinsic</button>
+                  <button type="button" data-dop="n" class="hw-dop rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold">n-Type Doped</button>
+                  <button type="button" data-dop="p" class="hw-dop rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold">p-Type Doped</button>
+                </div>
+              </div>
+              <div id="fd-eq" class="hw-formula eq px-2 pt-3 text-amber-100"></div>
+              <div id="fd-plot" class="hw-plot"></div>
+              <p id="fd-story" class="px-2 pb-2 text-sm leading-relaxed text-slate-400"></p>
+            </div>
+            <div class="glass-card rounded-2xl p-4">
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Band-edge indicator</p>
+              <div class="band-stack mt-3">
+                <div class="band-cb"></div>
+                <div class="band-gap"></div>
+                <div class="band-vb"></div>
+                <div id="fd-n-cloud" class="band-cloud-n"></div>
+                <div id="fd-p-cloud" class="band-cloud-p"></div>
+                <div id="fd-ef-tick" class="band-ef" style="top: 50%"></div>
+                <p class="absolute left-2 top-2 text-[10px] font-semibold text-cyan-200">E<sub>c</sub></p>
+                <p class="absolute bottom-2 left-2 text-[10px] font-semibold text-red-200">E<sub>v</sub></p>
+              </div>
+              <p id="fd-ef-read" class="mt-3 font-mono text-xs text-amber-200">E_F</p>
+              <p id="fd-n-read" class="mt-1 text-[11px] text-cyan-300/90"></p>
+              <p id="fd-p-read" class="text-[11px] text-orange-300/90"></p>
+              <p class="mt-3 text-[11px] leading-relaxed text-slate-500">Shades are qualitative tails, not calibrated integrals. For a neutrality solve, use the Fermi Level Visualizer on the catalog.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script type="module" src="js/hw/homework-portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+.hw-shell {
+  height: calc(100vh - 88px);
+  min-height: 0;
+}
+
+.hw-main {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.hw-sidebar {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(8, 15, 28, 0.92) 100%);
+}
+
+.hw-nav-btn,
+.hw-tab,
+.hw-lat,
+.hw-chip,
+.hw-dop {
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.hw-nav-btn.is-on {
+  background: linear-gradient(90deg, rgba(2, 132, 199, 0.28), rgba(16, 185, 129, 0.12));
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.15), 0 10px 28px rgba(2, 132, 199, 0.18);
+}
+
+.hw-nav-btn:disabled,
+.hw-nav-btn.is-soon {
+  opacity: 0.55;
+}
+
+.hw-tab.is-on {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(52, 211, 153, 0.45);
+  color: #d1fae5;
+}
+
+.hw-lat.is-on {
+  background: rgba(2, 132, 199, 0.28);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #e0f2fe;
+}
+
+.hw-chip:hover,
+.hw-lat:hover,
+.hw-tab:hover,
+.hw-dop:hover {
+  border-color: rgba(125, 211, 252, 0.45);
+  background: rgba(2, 132, 199, 0.12);
+}
+
+.hw-viewport {
+  position: relative;
+  min-height: 420px;
+  height: min(62vh, 640px);
+  border-radius: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(2, 132, 199, 0.14), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(153, 27, 27, 0.12), transparent 50%),
+    #0b1220;
+}
+
+.hw-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hw-tip {
+  position: absolute;
+  z-index: 5;
+  max-width: 240px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.7rem;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  color: #e2e8f0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  pointer-events: none;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.hw-main .glass-card:hover {
+  transform: none;
+}
+
+.hw-formula {
+  min-height: 3.4rem;
+  overflow-x: auto;
+}
+
+.hw-formula .katex-display {
+  margin: 0.35rem 0;
+}
+
+.is-warn {
+  color: #fde68a;
+}
+
+.hw-plot {
+  width: 100%;
+  min-height: 360px;
+}
+
+.hw-dop.is-on {
+  background: rgba(2, 132, 199, 0.32);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #e0f2fe;
+}
+
+.hw-dop.is-on[data-dop='n'] {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(52, 211, 153, 0.5);
+}
+
+.hw-dop.is-on[data-dop='p'] {
+  background: rgba(153, 27, 27, 0.38);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fecaca;
+}
+
+.band-stack {
+  position: relative;
+  height: 420px;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: #0b1220;
+}
+
+.band-cb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.28), rgba(2, 132, 199, 0.08));
+}
+
+.band-gap {
+  position: absolute;
+  top: 28%;
+  left: 0;
+  right: 0;
+  height: 44%;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(15, 23, 42, 0.2),
+    rgba(15, 23, 42, 0.2) 6px,
+    rgba(30, 41, 59, 0.35) 6px,
+    rgba(30, 41, 59, 0.35) 12px
+  );
+}
+
+.band-vb {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(0deg, rgba(248, 113, 113, 0.3), rgba(153, 27, 27, 0.08));
+}
+
+.band-cloud-n,
+.band-cloud-p {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  border-radius: 999px;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+.band-cloud-n {
+  top: 8%;
+  height: 16%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.85), transparent 70%);
+  filter: blur(6px);
+}
+
+.band-cloud-p {
+  bottom: 8%;
+  height: 16%;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.8), transparent 70%);
+  filter: blur(6px);
+}
+
+.band-ef {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 2px dashed #fbbf24;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.55);
+  transform: translateY(-1px);
+  transition: top 280ms ease;
+}
+
+.band-ef::after {
+  content: 'EF';
+  position: absolute;
+  right: 8px;
+  top: -1.15rem;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #fde68a;
+}
+
+.js-num {
+  width: 4.2rem;
+}
+
+@media (max-width: 1023px) {
+  .hw-viewport {
+    height: 380px;
+    min-height: 320px;
+  }
+}
