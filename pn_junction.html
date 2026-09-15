@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P–N Junction Carrier Dynamics · LatticeLab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { navy: '#0f172a', crimson: '#991b1b', electron: '#0284c7' },
+          fontFamily: {
+            sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+            serif: ['IBM Plex Serif', 'Georgia', 'serif'],
+            mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/pn-junction.css" />
+</head>
+<body class="font-sans antialiased">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-electron/10 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-crimson/10 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-sky-400/10">
+    <div class="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div>
+        <a href="index.html" class="back-btn inline-flex items-center gap-2 rounded-xl border border-sky-400/20 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-sky-100">
+          <i class="fa-solid fa-arrow-left"></i> Catalog
+        </a>
+        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80">ESE 2180 · Junction physics</p>
+        <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">P–N Junction Carrier Dynamics</h1>
+        <p class="mt-1 max-w-3xl text-sm text-slate-400">Diffusion dumps majority carriers into the other side. Recombination uncovers ions. The ions build a field from N toward P until <span class="text-amber-200">drift cancels diffusion</span>. Bias then tilts that balance.</p>
+      </div>
+      <div class="text-right">
+        <span id="bias-badge" class="bias-badge eq">Equilibrium</span>
+        <p class="mt-2 font-mono text-[11px] text-slate-500">Si-like · E<sub>g</sub> = 1.12 eV · n<sub>i</sub>(300 K) = 1.5×10<sup>10</sup> cm<sup>−3</sup></p>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-[1500px] px-4 py-5 sm:px-6">
+    <section class="glass rounded-2xl p-4 sm:p-5">
+      <div class="grid gap-4 lg:grid-cols-4">
+        <label class="block text-sm text-slate-300">
+          P-side doping N<sub>A</sub>
+          <span id="na-lab" class="float-right font-mono text-red-300">10<sup>16</sup></span>
+          <input id="na" type="range" min="14" max="18" step="0.01" value="16" class="mt-2 w-full" />
+          <span class="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-slate-500"><span>10<sup>14</sup></span><span>10<sup>18</sup> cm<sup>−3</sup></span></span>
+        </label>
+        <label class="block text-sm text-slate-300">
+          N-side doping N<sub>D</sub>
+          <span id="nd-lab" class="float-right font-mono text-sky-300">10<sup>16</sup></span>
+          <input id="nd" type="range" min="14" max="18" step="0.01" value="16" class="mt-2 w-full" />
+          <span class="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-slate-500"><span>10<sup>14</sup></span><span>10<sup>18</sup> cm<sup>−3</sup></span></span>
+        </label>
+        <label class="block text-sm text-slate-300">
+          Applied bias V<sub>a</sub>
+          <span id="va-lab" class="float-right font-mono text-amber-200">0.00 V</span>
+          <input id="va" type="range" min="-2" max="0.8" step="0.01" value="0" class="mt-2 w-full" />
+          <span class="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-slate-500"><span>−2.0 V reverse</span><span>+0.8 V forward</span></span>
+        </label>
+        <label class="block text-sm text-slate-300">
+          Temperature T
+          <span id="t-lab" class="float-right font-mono text-emerald-300">300 K</span>
+          <input id="t" type="range" min="200" max="500" step="1" value="300" class="mt-2 w-full" />
+          <span class="mt-1 flex justify-between text-[10px] uppercase tracking-wider text-slate-500"><span>200 K</span><span>500 K</span></span>
+        </label>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button type="button" id="btn-play" class="launch-btn rounded-xl px-4 py-2 text-sm font-semibold text-white">
+          <i class="fa-solid fa-pause"></i> Pause particle physics
+        </button>
+        <button type="button" id="btn-step" class="rounded-xl border border-amber-300/30 bg-amber-400/10 px-4 py-2 text-sm font-semibold text-amber-100">
+          <i class="fa-solid fa-forward-step"></i> Step-by-step diffusion
+        </button>
+        <button type="button" id="btn-reset" class="rounded-xl border border-white/15 px-4 py-2 text-sm text-slate-200">
+          Reset to equilibrium (V<sub>a</sub> = 0)
+        </button>
+      </div>
+      <p id="pn-story" class="mt-3 text-sm leading-relaxed text-slate-400">Thermal motion is live. Cyan dots are electrons; crimson rings are holes. Hover the slice for recombination, uncovered ions, drift, and diffusion.</p>
+    </section>
+
+    <section class="mt-5">
+      <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-lg font-semibold text-white">Carrier slice · x = −L → +L</h2>
+        <p class="text-[11px] text-slate-500">
+          <span class="legend-dot bg-sky-400 align-middle"></span> electrons
+          <span class="legend-ring ml-3 align-middle"></span> holes
+          <span class="ml-3 text-sky-300/80">+ donors</span>
+          <span class="ml-2 text-red-300/80">− acceptors</span>
+          <span class="ml-3 text-amber-200/80">ℰ from N → P</span>
+        </p>
+      </div>
+      <div class="pn-canvas-wrap border border-sky-400/15">
+        <canvas id="pn-canvas"></canvas>
+        <div id="pn-tip" class="pn-tip hidden"></div>
+      </div>
+    </section>
+
+    <section class="mt-5 grid gap-4 xl:grid-cols-3">
+      <article class="glass rounded-2xl p-3">
+        <h3 class="px-1 text-sm font-semibold text-white">A · Energy bands E(x)</h3>
+        <p class="px-1 text-[11px] text-slate-500">Parabolic bending across depletion. One E<sub>F</sub> at V<sub>a</sub> = 0; split by qV<sub>a</sub> under bias.</p>
+        <div class="pn-plot"><canvas id="plot-bands"></canvas></div>
+      </article>
+      <article class="glass rounded-2xl p-3">
+        <h3 class="px-1 text-sm font-semibold text-white">B · Space charge ρ(x) and |ℰ|(x)</h3>
+        <p class="px-1 text-[11px] text-slate-500">Step charge ±qN. Field is the integral — a triangle peaking at x = 0.</p>
+        <div class="pn-plot"><canvas id="plot-field"></canvas></div>
+      </article>
+      <article class="glass rounded-2xl p-3">
+        <h3 class="px-1 text-sm font-semibold text-white">C · n(x), p(x) · log scale</h3>
+        <p class="px-1 text-[11px] text-slate-500">Majorities sit at N<sub>A</sub> / N<sub>D</sub>. Minorities follow the law of the junction at the depletion edges.</p>
+        <div class="pn-plot"><canvas id="plot-carriers"></canvas></div>
+      </article>
+    </section>
+
+    <section class="glass mt-5 rounded-2xl p-5">
+      <h2 class="text-lg font-semibold text-white">Live depletion math</h2>
+      <p id="eq-ni" class="eq mt-2 text-sm text-slate-300"></p>
+      <div class="mt-3 grid gap-3 lg:grid-cols-2">
+        <div id="eq-vbi" class="pn-eq eq text-amber-100"></div>
+        <div id="eq-w" class="pn-eq eq text-sky-100"></div>
+        <div id="eq-xp" class="pn-eq eq text-red-200"></div>
+        <div id="eq-xn" class="pn-eq eq text-cyan-200"></div>
+      </div>
+      <div id="eq-neut" class="pn-eq eq mt-2 text-emerald-100"></div>
+      <p id="math-note" class="mt-3 text-sm leading-relaxed text-slate-400"></p>
+      <p class="mt-2 text-[11px] text-slate-500">Abrupt, fully depleted, non-degenerate Si teaching model. Particle counts are logarithmic stand-ins, not 10<sup>16</sup> dots. The existing diode lab still owns the circuit Q-point.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script type="module" src="js/sims/pn-lab.js"></script>
+</body>
+</html>
