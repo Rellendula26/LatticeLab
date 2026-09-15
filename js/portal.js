@@ -12,11 +12,41 @@
       led: 'Photonics',
       diode: 'Devices',
       lab: 'Core Concepts',
+      ek: 'Band Dynamics',
     };
 
     const catalogView = document.getElementById('catalog-view');
     const workspaceView = document.getElementById('workspace-view');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    (function bootIntro() {
+      const splash = document.getElementById('intro-splash');
+      if (!splash) {
+        document.body.classList.remove('intro-lock');
+        return;
+      }
+      let done = false;
+      const go = function () {
+        if (done) return;
+        done = true;
+        splash.classList.add('is-gone');
+        document.body.classList.remove('intro-lock');
+        setTimeout(function () { splash.remove(); }, 320);
+      };
+      if (reduceMotion) {
+        go();
+        return;
+      }
+      splash.addEventListener('click', go);
+      document.addEventListener('keydown', function onKey(e) {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          document.removeEventListener('keydown', onKey);
+          go();
+        }
+      });
+      setTimeout(go, 1680);
+    })();
     const inited = {};
     let activeSim = null;
     let absorbTimer = 0;
@@ -67,6 +97,7 @@
       ledAnim = null;
       if (typeof stopDiode === 'function') stopDiode();
       if (typeof stopLab === 'function') stopLab();
+      if (typeof stopEkMomentum === 'function') stopEkMomentum();
     }
 
     function launch(id) {
@@ -83,6 +114,7 @@
         document.querySelectorAll('.sim-panel').forEach((p) => p.classList.add('hidden'));
         document.getElementById('panel-' + id).classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (id === 'ek' && typeof initEkMomentum === 'function') initEkMomentum();
         requestAnimationFrame(() => {
           if (id === 'lattice') initLattice();
           if (id === 'density') initDensity();
@@ -92,6 +124,7 @@
           if (id === 'led') initLed();
           if (id === 'diode') initDiode();
           if (id === 'lab') initLab();
+          if (id === 'ek') initEkMomentum();
           resizeVisible();
         });
       }, 260);
