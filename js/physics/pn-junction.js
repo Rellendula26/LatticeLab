@@ -46,7 +46,24 @@ export class AbruptJunction {
       NA, ND, Va, T, ni, Vt, vbi, psi, W, xp, xn, Emax, L, eps, flat, bias,
       EFn: Vt * Math.log(ND / ni),
       qVa: Va,
+      I0: 1.2e-14 * (ni / PN.NI300) ** 2,
     };
+  }
+
+  /** Signed Ex (kV/cm). P is −x, N is +x, so Ex < 0: field points N → P. */
+  fieldX(x, s) {
+    return -this.field(x, s);
+  }
+
+  shockley(s) {
+    const arg = Math.max(-40, Math.min(40, s.Va / s.Vt));
+    return { I0: s.I0, I: s.I0 * (Math.exp(arg) - 1) };
+  }
+
+  region(x, s) {
+    if (x < -s.xp) return 'p';
+    if (x > s.xn) return 'n';
+    return 'dep';
   }
 
   phi(x, s) {
@@ -107,6 +124,8 @@ export class AbruptJunction {
     const Ei = [];
     const rho = [];
     const E = [];
+    const Ex = [];
+    const V = [];
     const nC = [];
     const pC = [];
     for (let i = 0; i < n; i++) {
@@ -119,10 +138,12 @@ export class AbruptJunction {
       Ei.push(b.Ei);
       rho.push(this.rhoOverQ(x, s));
       E.push(this.field(x, s) / 1000);
+      Ex.push(this.fieldX(x, s) / 1000);
+      V.push(this.phi(x, s));
       nC.push(c.n);
       pC.push(c.p);
     }
-    return { xs, Ec, Ev, Ei, rho, E, nC, pC };
+    return { xs, Ec, Ev, Ei, rho, E, Ex, V, nC, pC };
   }
 }
 

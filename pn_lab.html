@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PN Junction Lab · LatticeLab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { navy: '#0f172a', crimson: '#991b1b', electron: '#0284c7' },
+          fontFamily: {
+            sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+            serif: ['IBM Plex Serif', 'Georgia', 'serif'],
+            mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/pn-junction.css" />
+  <link rel="stylesheet" href="css/pn-lab.css" />
+</head>
+<body class="font-sans antialiased">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-electron/10 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-crimson/10 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-sky-400/10">
+    <div class="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div>
+        <a href="index.html" class="back-btn inline-flex items-center gap-2 rounded-xl border border-sky-400/20 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-sky-100">
+          <i class="fa-solid fa-arrow-left"></i> Catalog
+        </a>
+        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80">ESE 2180 · One process, many pictures</p>
+        <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">PN Junction Lab</h1>
+        <p class="mt-1 max-w-3xl text-sm text-slate-400">Doping, diffusion, uncovered ions, field, potential, and band bending are the same junction written in different languages. Bias only changes the barrier.</p>
+      </div>
+      <div class="text-right">
+        <span id="bias-badge" class="bias-badge eq">Equilibrium</span>
+        <p class="mt-2 font-mono text-[11px] text-slate-500">Si-like · E<sub>g</sub> = 1.12 eV · n<sub>i</sub>(300 K) = 1.5×10<sup>10</sup> cm<sup>−3</sup></p>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-[1500px] px-4 py-5 sm:px-6">
+    <nav class="mb-4 flex flex-wrap gap-2" role="tablist">
+      <button type="button" data-stage="form" class="pnj-stage is-on rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Form the junction</button>
+      <button type="button" data-stage="live" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Linked physics</button>
+      <button type="button" data-stage="fermi" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Carriers / Fermi</button>
+      <button type="button" data-stage="exam" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Exam intuition</button>
+    </nav>
+
+    <section class="glass mb-4 rounded-2xl p-4">
+      <div class="grid gap-4 lg:grid-cols-4">
+        <label class="block text-sm text-slate-300">
+          Acceptor N<sub>A</sub>
+          <span id="na-lab" class="float-right font-mono text-red-300">10<sup>16</sup></span>
+          <input id="na" type="range" min="15" max="18" step="0.01" value="16" class="mt-2 w-full" />
+        </label>
+        <label class="block text-sm text-slate-300">
+          Donor N<sub>D</sub>
+          <span id="nd-lab" class="float-right font-mono text-sky-300">10<sup>16</sup></span>
+          <input id="nd" type="range" min="15" max="18" step="0.01" value="16" class="mt-2 w-full" />
+        </label>
+        <label class="block text-sm text-slate-300">
+          Applied V<sub>A</sub>
+          <span id="va-lab" class="float-right font-mono text-amber-200">0.00 V</span>
+          <input id="va" type="range" min="-2" max="0.8" step="0.01" value="0" class="mt-2 w-full" />
+        </label>
+        <label class="block text-sm text-slate-300">
+          Temperature T
+          <span id="t-lab" class="float-right font-mono text-emerald-300">300 K</span>
+          <input id="t" type="range" min="250" max="400" step="1" value="300" class="mt-2 w-full" />
+        </label>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-1.5" id="presets"></div>
+    </section>
+
+    <section data-panel="form" class="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
+      <aside class="glass space-y-3 rounded-2xl p-4">
+        <p id="form-step" class="text-sm font-semibold text-amber-100">Step 0 · Isolated crystals</p>
+        <p id="form-copy" class="text-sm text-slate-300">Neutral p-type on the left, n-type on the right. Ions are screened. No net field yet.</p>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="btn-form-play" class="launch-btn rounded-xl px-3 py-2 text-sm font-semibold text-white">Play</button>
+          <button type="button" id="btn-form-step" class="rounded-xl border border-white/15 px-3 py-2 text-sm text-slate-200">Next step</button>
+          <button type="button" id="btn-form-reset" class="rounded-xl border border-white/15 px-3 py-2 text-sm text-slate-200">Reset</button>
+        </div>
+        <p class="takeaway text-sm" style="margin-top:1rem">Equilibrium is a cancellation, not a freeze. Carriers keep moving.</p>
+      </aside>
+      <div class="pnj-view overflow-hidden rounded-2xl border border-sky-400/15">
+        <canvas id="cv-form"></canvas>
+      </div>
+    </section>
+
+    <section data-panel="live" class="hidden space-y-4">
+      <div class="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <aside class="glass space-y-3 rounded-2xl p-4">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">Motion</p>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" data-flow="diff" class="pnj-chip rounded-lg border border-white/15 px-2.5 py-1 text-xs font-semibold">Diffusion</button>
+            <button type="button" data-flow="drift" class="pnj-chip rounded-lg border border-white/15 px-2.5 py-1 text-xs font-semibold">Drift</button>
+            <button type="button" data-flow="both" class="pnj-chip is-on rounded-lg border border-white/15 px-2.5 py-1 text-xs font-semibold">Both</button>
+          </div>
+          <p id="flow-lab" class="text-xs text-slate-400">Diffusion: concentration gradient. Drift: electric field.</p>
+          <label class="flex gap-2 text-sm text-slate-300"><input id="show-j" type="checkbox" class="accent-amber-400" /> Show conventional current</label>
+          <label class="flex gap-2 text-sm text-slate-300"><input id="why-on" type="checkbox" class="accent-amber-400" /> Why does this happen?</label>
+          <p id="eq-barrier" class="eq-inline eq text-amber-100 text-xs"></p>
+          <p id="eq-w" class="eq-inline eq text-sky-100 text-xs"></p>
+          <p id="bias-why" class="text-sm text-slate-300"></p>
+          <div id="why-box" class="pnj-why hidden rounded-xl p-3">
+            <p id="why-title" class="text-sm font-semibold text-amber-100"></p>
+            <div id="why-chain" class="pnj-chain mt-2"></div>
+            <p id="why-copy" class="mt-2 text-sm text-slate-300"></p>
+          </div>
+        </aside>
+        <div>
+          <div class="pnj-view overflow-hidden rounded-2xl border border-sky-400/15">
+            <canvas id="cv-junc"></canvas>
+            <div id="junc-tip" class="pnj-tip hidden"></div>
+          </div>
+          <p class="mt-2 text-[11px] text-slate-500">Filled cyan: electrons. Open crimson: holes. Stationary +/− : D<sup>+</sup> / A<sup>−</sup>. Particle counts are a visualization.</p>
+        </div>
+      </div>
+
+      <article class="glass rounded-2xl p-3">
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold text-white">Charge balance · N<sub>A</sub> x<sub>p</sub> = N<sub>D</sub> x<sub>n</sub></h2>
+          <p id="balance-lab" class="pnj-read"></p>
+        </div>
+        <p class="mb-2 text-xs text-slate-400">The depletion region extends farther into the less heavily doped side. Areas match: uncovered A<sup>−</sup> charge equals uncovered D<sup>+</sup> charge.</p>
+        <div class="pnj-balance overflow-hidden rounded-xl border border-white/10">
+          <canvas id="cv-bal"></canvas>
+        </div>
+      </article>
+
+      <article class="glass rounded-2xl p-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold text-white">Same x · four languages</h2>
+          <p id="cursor-lab" class="pnj-read">Drag the cursor across the stack.</p>
+        </div>
+        <p class="mt-1 text-xs text-slate-400">ρ is a rectangle. E is the integral of ρ, so a triangle. V is the integral of −E, so a parabola. Bands follow −qV. At equilibrium E<sub>F</sub> is flat.</p>
+        <div class="pnj-stack mt-2 overflow-hidden rounded-xl border border-white/10">
+          <canvas id="cv-stack"></canvas>
+        </div>
+        <p class="mt-2 text-[11px] text-slate-500">Shaded area under |E| equals the potential drop V<sub>bi</sub> − V<sub>A</sub>. Click a panel when “Why” is on.</p>
+      </article>
+
+      <div class="grid gap-4 lg:grid-cols-2">
+        <article class="glass rounded-2xl p-3">
+          <h2 class="text-sm font-semibold text-white">Shockley I-V</h2>
+          <p class="text-xs text-slate-400">I = I<sub>0</sub> (e<sup>qV<sub>A</sub>/kT</sup> − 1). The marker is this bias. The exponential is the barrier dropping, not a switch.</p>
+          <div class="pnj-iv mt-2"><canvas id="cv-iv"></canvas></div>
+          <p id="iv-lab" class="pnj-read mt-2"></p>
+        </article>
+        <article class="glass rounded-2xl p-4 text-sm text-slate-300 space-y-2">
+          <p id="eq-i" class="eq text-emerald-100"></p>
+          <p class="text-xs text-slate-500">Hover symbols in the live readout. Forward: more majority carriers climb a lower barrier. Reverse: that climb is shut; leftover current is mostly minority drift toward −I<sub>0</sub>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section data-panel="fermi" class="hidden grid gap-4 lg:grid-cols-2">
+      <article class="glass rounded-2xl p-4">
+        <h2 class="text-sm font-semibold text-white">Bulk Fermi shift</h2>
+        <p class="mt-1 text-xs text-slate-400">n = n<sub>i</sub> exp((E<sub>F</sub>−E<sub>i</sub>)/kT). p = n<sub>i</sub> exp((E<sub>i</sub>−E<sub>F</sub>)/kT). np = n<sub>i</sub><sup>2</sup>. Exponential in the exponent, not a linear slide.</p>
+        <div class="pnj-fermi mt-3"><canvas id="cv-fermi"></canvas></div>
+      </article>
+      <article class="glass rounded-2xl p-4 space-y-3">
+        <div id="eq-np" class="eq text-sky-100"></div>
+        <p id="fermi-p" class="text-sm text-slate-300"></p>
+        <p id="fermi-n" class="text-sm text-slate-300"></p>
+        <p class="text-xs text-slate-500">P-side: E<sub>F</sub> toward E<sub>v</sub>, holes up, electrons down. N-side: E<sub>F</sub> toward E<sub>c</sub>, the reverse. The junction then has to connect those two bulk pictures with one electrostatic potential.</p>
+      </article>
+    </section>
+
+    <section data-panel="exam" class="hidden">
+      <article class="glass rounded-2xl p-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-lg font-semibold text-white">Predict, then watch</h2>
+          <button type="button" id="btn-exam" class="launch-btn rounded-xl px-3 py-2 text-sm font-semibold text-white">New question</button>
+        </div>
+        <p id="exam-q" class="mt-4 text-sm font-semibold text-amber-100"></p>
+        <div id="exam-opts" class="mt-3 flex flex-col gap-2"></div>
+        <p id="exam-why" class="mt-3 hidden text-sm text-slate-300"></p>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script type="module" src="js/sims/pnj-studio.js"></script>
+</body>
+</html>
