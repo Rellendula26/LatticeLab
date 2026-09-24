@@ -3,16 +3,22 @@
  */
 
 export const FORM = [
-  { t: 'Step 0 · Isolated crystals', c: 'Neutral p-type on the left, n-type on the right. Mobile carriers still screen the ions. No net field.' },
-  { t: 'Step 1 · Contact', c: 'The crystals share an interface. A concentration gradient now exists for both electrons and holes.' },
-  { t: 'Step 2 · Holes diffuse P → N', c: 'Holes are majority on the p-side. They wander down their gradient into the n-side.' },
-  { t: 'Step 3 · Electrons diffuse N → P', c: 'Electrons do the same in the opposite direction. Both populations leave the junction neighborhood.' },
-  { t: 'Step 4 · Ions stay behind', c: 'A− on the p-side and D+ on the n-side are fixed in the lattice. They are no longer screened near the junction.' },
-  { t: 'Step 5 · Depletion region', c: 'That uncovered strip is empty of mobile charge, not of charge. It is the depletion region.' },
-  { t: 'Step 6 · Field N → P', c: 'Positive space charge on N, negative on P. The field points from N toward P.' },
-  { t: 'Step 7 · Drift opposes diffusion', c: 'The field drives holes N → P and electrons P → N. That is drift, opposite to diffusion.' },
-  { t: 'Step 8 · Equilibrium', c: 'Diffusion current = drift current. Net current = 0. Carriers are still moving.' },
+  { t: 'Step 0 · Isolated crystals', c: 'Neutral p-type on the left, n-type on the right. Mobile carriers still screen the ions. No net field.', rail: 'start' },
+  { t: 'Step 1 · Contact', c: 'The crystals share an interface. A concentration gradient now exists for both electrons and holes.', rail: 'start' },
+  { t: 'Step 2 · Holes diffuse P → N', c: 'Holes are majority on the p-side. They wander down their gradient into the n-side.', rail: 'diffusion' },
+  { t: 'Step 3 · Electrons diffuse N → P', c: 'Electrons do the same in the opposite direction. Both populations leave the junction neighborhood.', rail: 'diffusion' },
+  { t: 'Step 4 · Ions stay behind', c: 'A− on the p-side and D+ on the n-side are fixed in the lattice. They are no longer screened near the junction.', rail: 'depletion' },
+  { t: 'Step 5 · Depletion region', c: 'That uncovered strip is empty of mobile charge, not of charge. It is the depletion region.', rail: 'depletion' },
+  { t: 'Step 6 · Field N → P', c: 'Positive space charge on N, negative on P. The field points from N toward P.', rail: 'field' },
+  { t: 'Step 7 · Drift opposes diffusion', c: 'The field drives holes N → P and electrons P → N. That is drift, opposite to diffusion.', rail: 'drift' },
+  { t: 'Step 8 · Equilibrium', c: 'Diffusion current = drift current. Net current = 0. Carriers are still moving.', rail: 'equilibrium', va: 0 },
+  { t: 'Step 9 · Forward bias', c: 'P is now positive relative to N. The barrier is Vbi − VA. Majority carriers climb it in much larger numbers. That is injection, not a switch flipping on.', rail: 'bias', va: 0.55 },
+  { t: 'Step 10 · Reverse bias', c: 'The barrier is Vbi + |VA|. Majority diffusion almost stops. The leftover current is mostly minority-carrier drift, sitting near −I0.', rail: 'bias', va: -1.2 },
+  { t: 'Step 11 · Diode current', c: 'I = I0 (exp(qVA/kT) − 1) is the same story as a number. Lower barrier, exponential climb. Raise the barrier, current collapses toward −I0.', rail: 'current', va: 0.55, showIv: true },
 ];
+
+export const STORY_LAST = FORM.length - 1;
+export const LAB_FORM_LAST = 8;
 
 export class JunctionView {
   constructor(canvas, tipEl) {
@@ -138,8 +144,11 @@ export class JunctionView {
     if (this.formStep >= 6 || this.mode === 'live') this._field(ctx, L, s);
     if (this.mode === 'live' || this.formStep >= 2) this._flowArrows(ctx, L, s);
     if (this.showJ && this.mode === 'live') this._conventional(ctx, L, s);
-    this._labels(ctx, L, s);
-    if (this.mode === 'form' && this.formStep >= 8) this._eqBanner(ctx, L);
+    if (this.mode === 'form' && this.formStep >= 11) this._conventional(ctx, L, s);
+    if (this.mode === 'live' || this.formStep >= 5) this._labels(ctx, L, s);
+    if (this.mode === 'form' && this.formStep === 8) this._eqBanner(ctx, L);
+    if (this.mode === 'form' && this.formStep === 9) this._biasBanner(ctx, L, 'Barrier = Vbi − VA. Majority injection rises. That is forward current.');
+    if (this.mode === 'form' && this.formStep === 10) this._biasBanner(ctx, L, 'Barrier = Vbi + |VA|. Majority diffusion almost stops. Current ≈ −I0.');
   }
 
   _crystals(ctx, L, s) {
@@ -299,13 +308,17 @@ export class JunctionView {
   }
 
   _eqBanner(ctx, L) {
+    this._biasBanner(ctx, L, 'Diffusion current = drift current.  Net current = 0.  Carriers are still moving.');
+  }
+
+  _biasBanner(ctx, L, text) {
     const { box, d } = L;
     ctx.fillStyle = 'rgba(15,23,42,0.82)';
     ctx.fillRect(box.x + 20 * d, box.y + box.h * 0.38, box.w - 40 * d, 44 * d);
     ctx.fillStyle = '#fde68a';
     ctx.font = `${12 * d}px "IBM Plex Sans", sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText('Diffusion current = drift current.  Net current = 0.  Carriers are still moving.', box.x + box.w / 2, box.y + box.h * 0.38 + 28 * d);
+    ctx.fillText(text, box.x + box.w / 2, box.y + box.h * 0.38 + 28 * d);
   }
 
   _frac(clientX) {

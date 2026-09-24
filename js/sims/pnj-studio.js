@@ -1,5 +1,5 @@
 import { AbruptJunction, renderKatex, sci } from '../physics/pn-junction.js';
-import { JunctionView, BalanceView, FORM } from './pnj-canvas.js';
+import { JunctionView, BalanceView, FORM, STORY_LAST, LAB_FORM_LAST } from './pnj-canvas.js';
 import { StackPlots, IVChart, FermiView } from './pnj-plots.js';
 
 const PRESETS = [
@@ -157,8 +157,10 @@ class PNJunctionStudio {
     this.bal = new BalanceView(document.getElementById('cv-bal'));
     this.stack = new StackPlots(document.getElementById('cv-stack'));
     this.iv = new IVChart(document.getElementById('cv-iv'));
+    this.storyIv = new IVChart(document.getElementById('cv-story-iv'));
     this.fermi = new FermiView(document.getElementById('cv-fermi'));
     this.stage = 'form';
+    this.story = new URLSearchParams(window.location.search).get('mode') === 'story';
     this.formPlaying = false;
     this.formAcc = 0;
     this.examIdx = 0;
@@ -176,6 +178,9 @@ class PNJunctionStudio {
     requestAnimationFrame(this._loop);
     window.addEventListener('resize', () => this._resize());
     this._exam(0);
+    if (this.story) this._enterStory();
+    else if (new URLSearchParams(window.location.search).get('mode') === 'lab') this.setStage('live');
+    else this._applyFormStep();
   }
 
   _presets() {
@@ -228,11 +233,14 @@ class PNJunctionStudio {
       document.getElementById('btn-form-play').textContent = this.formPlaying ? 'Pause' : 'Play';
     });
     document.getElementById('btn-form-step').addEventListener('click', () => this._formNext());
+    document.getElementById('btn-form-back').addEventListener('click', () => this._formBack());
     document.getElementById('btn-form-reset').addEventListener('click', () => {
       this.form.formStep = 0;
       this.formPlaying = false;
       document.getElementById('btn-form-play').textContent = 'Play';
-      this._formCopy();
+      document.getElementById('va').value = '0';
+      this.sync();
+      this._applyFormStep();
     });
     document.getElementById('btn-exam').addEventListener('click', () => {
       this._exam((this.examIdx + 1) % EXAM.length);
@@ -245,6 +253,7 @@ class PNJunctionStudio {
     document.querySelectorAll('[data-panel]').forEach((p) => p.classList.toggle('hidden', p.dataset.panel !== id));
     this._resize();
     this.sync();
+    if (id === 'form') this._applyFormStep();
   }
 
   inputs() {
@@ -265,6 +274,7 @@ class PNJunctionStudio {
     const samp = this.physics.sample(s);
     this.stack.update(s, samp);
     const iv = this.iv.update(this.physics, s);
+    this.storyIv.update(this.physics, s);
     this.bal.draw(s);
     this.fermi.draw(s, this.physics);
     this._hud(s, iv);
@@ -313,19 +323,67 @@ class PNJunctionStudio {
       `<span>${s}</span>${i < a.length - 1 ? '<i class="fa-solid fa-arrow-down"></i>' : ''}`).join('');
   }
 
+  _formLast() {
+    return this.story ? STORY_LAST : LAB_FORM_LAST;
+  }
+
+  _enterStory() {
+    document.body.classList.add('is-story');
+    document.title = 'PN Junction Story Mode · LatticeLab';
+    document.getElementById('lab-kicker').textContent = 'Guided simulation';
+    document.getElementById('lab-title').textContent = 'PN Junction Story Mode';
+    document.getElementById('lab-lede').textContent = 'Build a diode from two crystals. Each idea causes the next. You predict nothing yet. Watch the chain.';
+    ['na', 'nd', 'va', 't'].forEach((id) => { document.getElementById(id).disabled = true; });
+    this.setStage('form');
+    this._applyFormStep();
+  }
+
   _formNext() {
-    this.form.formStep = Math.min(8, this.form.formStep + 1);
-    this._formCopy();
-    if (this.form.formStep >= 8) {
+    this.form.formStep = Math.min(this._formLast(), this.form.formStep + 1);
+    this._applyFormStep();
+    if (this.form.formStep >= this._formLast()) {
       this.formPlaying = false;
       document.getElementById('btn-form-play').textContent = 'Play';
     }
+  }
+
+  _formBack() {
+    this.form.formStep = Math.max(0, this.form.formStep - 1);
+    this.formPlaying = false;
+    document.getElementById('btn-form-play').textContent = 'Play';
+    this._applyFormStep();
   }
 
   _formCopy() {
     const f = FORM[this.form.formStep];
     document.getElementById('form-step').textContent = f.t;
     document.getElementById('form-copy').textContent = f.c;
+  }
+
+  _applyFormStep() {
+    const f = FORM[this.form.formStep];
+    this._formCopy();
+    if (f.va != null) {
+      document.getElementById('va').value = String(f.va);
+      this.sync();
+    } else {
+      document.getElementById('va').value = '0';
+      this.sync();
+    }
+    document.getElementById('story-iv-wrap').classList.toggle('hidden', !f.showIv);
+    document.getElementById('btn-to-lab').classList.toggle('hidden', !(this.story && this.form.formStep >= STORY_LAST));
+    const take = document.getElementById('form-takeaway');
+    take.textContent = f.rail === 'equilibrium'
+      ? 'Equilibrium is a cancellation, not a freeze. Carriers keep moving.'
+      : f.rail === 'bias'
+        ? 'Bias does not invent a new mechanism. It only changes the barrier height.'
+        : f.rail === 'current'
+          ? 'The exponential is the barrier dropping. That is the whole diode.'
+          : 'Each arrow is a cause. The next picture is the effect.';
+    document.querySelectorAll('#story-rail [data-rail]').forEach((el) => {
+      el.classList.toggle('is-on', el.dataset.rail === f.rail);
+    });
+    if (f.showIv) this._resize();
   }
 
   _exam(i) {
@@ -370,6 +428,7 @@ class PNJunctionStudio {
     this.stack.resize();
     this.fermi.resize();
     if (this.iv) this.iv.chart.resize();
+    if (this.storyIv) this.storyIv.chart.resize();
     if (this.state) {
       this.stack.draw();
       this.bal.draw(this.state);

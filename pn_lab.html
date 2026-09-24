@@ -42,9 +42,9 @@
         <a href="index.html" class="back-btn inline-flex items-center gap-2 rounded-xl border border-sky-400/20 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-sky-100">
           <i class="fa-solid fa-arrow-left"></i> Catalog
         </a>
-        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80">ESE 2180 · One process, many pictures</p>
-        <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">PN Junction Lab</h1>
-        <p class="mt-1 max-w-3xl text-sm text-slate-400">Doping, diffusion, uncovered ions, field, potential, and band bending are the same junction written in different languages. Bias only changes the barrier.</p>
+        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80" id="lab-kicker">ESE 2180 · One process, many pictures</p>
+        <h1 id="lab-title" class="text-2xl font-bold tracking-tight text-white sm:text-3xl">PN Junction Lab</h1>
+        <p id="lab-lede" class="mt-1 max-w-3xl text-sm text-slate-400">Doping, diffusion, uncovered ions, field, potential, and band bending are the same junction written in different languages. Bias only changes the barrier.</p>
       </div>
       <div class="text-right">
         <span id="bias-badge" class="bias-badge eq">Equilibrium</span>
@@ -54,14 +54,24 @@
   </header>
 
   <main class="relative z-10 mx-auto max-w-[1500px] px-4 py-5 sm:px-6">
-    <nav class="mb-4 flex flex-wrap gap-2" role="tablist">
+    <nav class="mb-4 flex flex-wrap gap-2 lab-only" role="tablist">
       <button type="button" data-stage="form" class="pnj-stage is-on rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Form the junction</button>
       <button type="button" data-stage="live" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Linked physics</button>
       <button type="button" data-stage="fermi" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Carriers / Fermi</button>
       <button type="button" data-stage="exam" class="pnj-stage rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold">Exam intuition</button>
     </nav>
 
-    <section class="glass mb-4 rounded-2xl p-4">
+    <ol id="story-rail" class="story-rail mb-4 flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+      <li data-rail="diffusion">diffusion</li>
+      <li data-rail="depletion">depletion</li>
+      <li data-rail="field">electric field</li>
+      <li data-rail="drift">drift</li>
+      <li data-rail="equilibrium">equilibrium</li>
+      <li data-rail="bias">bias</li>
+      <li data-rail="current">diode current</li>
+    </ol>
+
+    <section class="glass mb-4 rounded-2xl p-4" id="controls">
       <div class="grid gap-4 lg:grid-cols-4">
         <label class="block text-sm text-slate-300">
           Acceptor N<sub>A</sub>
@@ -84,7 +94,7 @@
           <input id="t" type="range" min="250" max="400" step="1" value="300" class="mt-2 w-full" />
         </label>
       </div>
-      <div class="mt-3 flex flex-wrap gap-1.5" id="presets"></div>
+      <div class="mt-3 flex flex-wrap gap-1.5 lab-only" id="presets"></div>
     </section>
 
     <section data-panel="form" class="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
@@ -92,14 +102,22 @@
         <p id="form-step" class="text-sm font-semibold text-amber-100">Step 0 · Isolated crystals</p>
         <p id="form-copy" class="text-sm text-slate-300">Neutral p-type on the left, n-type on the right. Ions are screened. No net field yet.</p>
         <div class="flex flex-wrap gap-2">
+          <button type="button" id="btn-form-back" class="rounded-xl border border-white/15 px-3 py-2 text-sm text-slate-200">Back</button>
           <button type="button" id="btn-form-play" class="launch-btn rounded-xl px-3 py-2 text-sm font-semibold text-white">Play</button>
           <button type="button" id="btn-form-step" class="rounded-xl border border-white/15 px-3 py-2 text-sm text-slate-200">Next step</button>
           <button type="button" id="btn-form-reset" class="rounded-xl border border-white/15 px-3 py-2 text-sm text-slate-200">Reset</button>
         </div>
-        <p class="takeaway text-sm" style="margin-top:1rem">Equilibrium is a cancellation, not a freeze. Carriers keep moving.</p>
+        <p class="takeaway text-sm" id="form-takeaway" style="margin-top:1rem">Equilibrium is a cancellation, not a freeze. Carriers keep moving.</p>
+        <a id="btn-to-lab" href="pn_lab.html?mode=lab" class="hidden launch-btn mt-2 inline-flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-white">Continue in the full lab</a>
       </aside>
-      <div class="pnj-view overflow-hidden rounded-2xl border border-sky-400/15">
-        <canvas id="cv-form"></canvas>
+      <div>
+        <div class="pnj-view overflow-hidden rounded-2xl border border-sky-400/15">
+          <canvas id="cv-form"></canvas>
+        </div>
+        <div id="story-iv-wrap" class="mt-3 hidden rounded-2xl border border-white/10 p-3">
+          <p class="text-xs text-slate-400">The marker is this bias. Reverse sits at −I<sub>0</sub> on this scale.</p>
+          <div class="pnj-iv mt-2"><canvas id="cv-story-iv"></canvas></div>
+        </div>
       </div>
     </section>
 

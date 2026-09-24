@@ -3,10 +3,11 @@ import { MillerSketcher } from './miller-sketcher.js';
 import { SiliconEkLab } from './silicon-ek.js';
 import { FermiDiracViz } from './fermi-hw.js';
 import { MillerMath } from './crystal-math.js';
+import { bootHomework2 } from './hw2/studio.js';
 
 const HOMEWORKS = [
   { id: 'hw1', title: 'Homework 1', blurb: 'Crystallography & Carrier Statistics', live: true },
-  { id: 'hw2', title: 'Homework 2', blurb: 'Transport & scattering — coming soon', live: false },
+  { id: 'hw2', title: 'Homework 2', blurb: 'Semiconductor Fundamentals II', live: true },
   { id: 'hw3', title: 'Homework 3', blurb: 'Junctions & devices — coming soon', live: false },
 ];
 
@@ -35,10 +36,13 @@ class HomeworkPortal {
     this.miller = null;
     this.ek = null;
     this.fermi = null;
+    this.hw2 = null;
     this._bindShell();
     this._bindCell();
     this._bindMiller();
     this._ensureTab('cell');
+    const want = new URLSearchParams(window.location.search).get('hw');
+    if (want === 'hw2') this.setHomework('hw2');
   }
 
   _bindShell() {
@@ -55,7 +59,10 @@ class HomeworkPortal {
     this.hw = id;
     document.querySelectorAll('[data-hw]').forEach((b) => b.classList.toggle('is-on', b.dataset.hw === id));
     document.getElementById('hw-live').classList.toggle('hidden', id !== 'hw1');
-    document.getElementById('hw-soon').classList.toggle('hidden', id === 'hw1');
+    document.getElementById('hw2-live').classList.toggle('hidden', id !== 'hw2');
+    document.getElementById('hw-soon').classList.toggle('hidden', id === 'hw1' || id === 'hw2');
+    document.getElementById('hw1-nav').classList.toggle('hidden', id !== 'hw1');
+    document.getElementById('hw2-nav').classList.toggle('hidden', id !== 'hw2');
     const meta = HOMEWORKS.find((h) => h.id === id);
     document.getElementById('hw-soon-title').textContent = meta ? meta.title : id;
     document.getElementById('hw-soon-blurb').textContent = meta ? meta.blurb : '';
@@ -63,6 +70,10 @@ class HomeworkPortal {
     else {
       this.cell && this.cell.hide();
       this.miller && this.miller.hide();
+    }
+    if (id === 'hw2') {
+      if (!this.hw2) this.hw2 = bootHomework2();
+      this.hw2.resize();
     }
   }
 
@@ -141,6 +152,7 @@ class HomeworkPortal {
       if (this.tab === 'miller' && this.miller) this.miller.view.resize();
       if (this.tab === 'ek' && this.ek) this.ek.resize();
       if (this.tab === 'fermi' && this.fermi) this.fermi.resize();
+      if (this.hw === 'hw2' && this.hw2) this.hw2.resize();
     });
   }
 
