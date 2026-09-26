@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam 1 Practice · LatticeLab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { navy: '#0f172a', crimson: '#991b1b', electron: '#0284c7' },
+          fontFamily: {
+            sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+            serif: ['IBM Plex Serif', 'Georgia', 'serif'],
+            mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/exam1.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+</head>
+<body class="font-sans antialiased">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-electron/10 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl"></div>
+    <div class="absolute bottom-10 left-0 h-64 w-64 rounded-full bg-crimson/10 blur-3xl"></div>
+  </div>
+
+  <header class="relative z-10 border-b border-sky-400/10">
+    <div class="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="index.html" class="back-btn inline-flex items-center gap-2 rounded-xl border border-sky-400/20 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-sky-100">
+          <i class="fa-solid fa-arrow-left"></i> Catalog
+        </a>
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80">ESE 2180 · Exam 1</p>
+          <h1 class="text-xl font-bold tracking-tight text-white sm:text-2xl">Conceptual study environment</h1>
+        </div>
+      </div>
+      <nav class="flex flex-wrap gap-1.5" aria-label="Exam 1 modes">
+        <a href="exam1.html" data-examnav="hub" class="ex-chip">Home</a>
+        <a href="exam1.html?mode=exam" data-examnav="exam" class="ex-chip">Practice exams</a>
+        <a href="exam1.html?mode=sheet" data-examnav="sheet" class="ex-chip">Formula sheet</a>
+        <a href="exam1.html?mode=challenge" data-examnav="challenge" class="ex-chip">Explain it</a>
+        <a href="exam1.html?mode=traps" data-examnav="traps" class="ex-chip">Traps</a>
+        <a href="exam1.html?mode=mastery" data-examnav="mastery" class="ex-chip">Mastery</a>
+        <a href="exam1.html?mode=chains" data-examnav="chains" class="ex-chip">Chains</a>
+        <a href="exam1.html?mode=draw" data-examnav="draw" class="ex-chip">Draw</a>
+        <a href="exam1.html?mode=audit" data-examnav="audit" class="ex-chip">Audit</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="exam-root" class="relative z-10 mx-auto max-w-[1500px] px-4 py-6 sm:px-6"></main>
+  <script type="module" src="js/exam1/studio.js"></script>
+</body>
+</html>

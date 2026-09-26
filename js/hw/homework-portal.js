@@ -16,6 +16,8 @@ const PLANE_PRESETS = [
   { h: 1, k: 1, l: 0, label: '(110)' },
   { h: 1, k: 1, l: 1, label: '(111)' },
   { h: 2, k: 1, l: 0, label: '(210)' },
+  { h: 1, k: -1, l: 0, label: '(1-10)' },
+  { h: 1, k: 1, l: -1, label: '(11-1)' },
 ];
 
 const DIR_PRESETS = [
@@ -41,8 +43,14 @@ class HomeworkPortal {
     this._bindCell();
     this._bindMiller();
     this._ensureTab('cell');
-    const want = new URLSearchParams(window.location.search).get('hw');
-    if (want === 'hw2') this.setHomework('hw2');
+    const qs = new URLSearchParams(window.location.search);
+    if (qs.get('hw') === 'hw2') this.setHomework('hw2');
+    const tab = (location.hash || '').replace('#', '');
+    if (tab && ['cell', 'miller', 'ek', 'fermi'].includes(tab)) this.setTab(tab);
+    window.addEventListener('hashchange', () => {
+      const next = (location.hash || '').replace('#', '');
+      if (next && ['cell', 'miller', 'ek', 'fermi'].includes(next)) this.setTab(next);
+    });
   }
 
   _bindShell() {
