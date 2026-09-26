@@ -141,6 +141,7 @@
               <ul id="hw2-find" class="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-300"></ul>
             </div>
           </div>
+          <div id="hw2-predict" class="glass rounded-2xl p-4 mt-4"></div>
           <div class="mt-4">
             <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-300/80">Interactive visualization</p>
             <div id="hw2-viz" class="mt-2"></div>
@@ -211,6 +212,10 @@
                   <li><span class="inline-block h-2 w-2 rounded-full bg-red-400"></span> diamond internals · 1</li>
                 </ul>
               </div>
+              <div class="glass rounded-2xl p-4">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200/80">Trap · N is not density</p>
+                <p class="mt-2 text-sm leading-relaxed text-slate-300">Guess N before you toggle Fractional Cuts. Diamond has eight atoms per cell and FCC has four. That does not make diamond “twice as dense.” Mass density is N × atomic mass / a³. A larger conventional cell can cancel a larger N.</p>
+              </div>
             </div>
           </div>
         </article>
@@ -266,6 +271,7 @@
                   <input id="m-paste" class="field flex-1 rounded-md px-2 py-1 text-xs text-white" placeholder="(210) or [0 1 -2]" />
                 </div>
                 <p id="miller-scale-note" class="mt-3 text-xs leading-relaxed text-slate-400"></p>
+                <p class="mt-3 text-xs leading-relaxed text-slate-300">Index 0 means the intercept is at infinity: the plane is parallel to that axis, not that it hits the origin. A negative index is a negative intercept (the other side of the origin), not a negative size. Try (1−10) and [01−2].</p>
               </div>
             </div>
           </div>
@@ -290,6 +296,7 @@
               <p id="si-vol-note" class="text-xs text-slate-500"></p>
               <div id="si-dens-eq" class="hw-formula eq mt-3 text-emerald-100"></div>
               <p id="si-dens-note" class="text-xs text-slate-500"></p>
+              <p class="mt-3 text-xs leading-relaxed text-slate-300">Si uses N = 8 because diamond cubic is two interpenetrating FCC lattices. Stretching a lowers n as 1/a³. More atoms per cell is not a free upgrade in mass density.</p>
             </div>
             <div class="glass rounded-2xl p-5">
               <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Conservation reminder</p>
@@ -297,6 +304,10 @@
               <p class="mt-3 text-sm leading-relaxed text-slate-400">These E(k) curves are teaching parabolas, not DFT. Heights match the usual textbook gaps (Si 1.12 eV, GaAs 1.42 eV) and the Γ–X offset.</p>
             </div>
           </div>
+          <details class="glass rounded-2xl p-4 mt-4">
+            <summary class="cursor-pointer text-sm font-semibold text-amber-100">Predict before Excite</summary>
+            <p class="mt-2 text-sm text-slate-300">In GaAs the photon arrow should be vertical (same k). In Si the photon is still vertical; a phonon supplies the leftover Δk to the X valley. Press Excite only after you can say that out loud.</p>
+          </details>
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <button type="button" id="ek-excite" class="launch-btn rounded-xl px-4 py-2.5 text-sm font-semibold text-white">
               <i class="fa-solid fa-bolt mr-2"></i>Excite Electron
@@ -324,11 +335,16 @@
           <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_240px]">
             <div class="glass rounded-2xl p-3">
               <div class="flex flex-wrap items-end justify-between gap-4 px-2 pt-2">
-                <label class="min-w-[220px] flex-1 text-sm text-slate-300">
+                <label class="min-w-0 flex-1 text-sm text-slate-300">
                   Temperature
                   <span id="fd-t-lab" class="float-right font-mono text-amber-200">300 K</span>
                   <input id="fd-t" type="range" min="0" max="800" step="1" value="300" class="mt-2 w-full" />
                 </label>
+                <div class="flex flex-wrap gap-1.5" id="fd-t-presets">
+                  <button type="button" data-fd-t="0" class="hw-chip">0 K</button>
+                  <button type="button" data-fd-t="300" class="hw-chip is-on">300 K</button>
+                  <button type="button" data-fd-t="500" class="hw-chip">500 K</button>
+                </div>
                 <div id="fd-dop" class="flex flex-wrap gap-1.5">
                   <button type="button" data-dop="i" class="hw-dop is-on rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold">Intrinsic</button>
                   <button type="button" data-dop="n" class="hw-dop rounded-lg border border-white/10 px-2.5 py-1.5 text-xs font-semibold">n-Type Doped</button>

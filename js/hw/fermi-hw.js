@@ -17,6 +17,18 @@ export class FermiDiracViz {
         this.redraw();
       });
     });
+    document.querySelectorAll('[data-fd-t]').forEach((btn) => {
+      btn.addEventListener('click', () => this.setT(Number(btn.dataset.fdT)));
+    });
+    this.redraw();
+  }
+
+  setT(T) {
+    this.T = Number(T);
+    if (this.els.tSlider) this.els.tSlider.value = String(this.T);
+    document.querySelectorAll('[data-fd-t]').forEach((b) => {
+      b.classList.toggle('is-on', Number(b.dataset.fdT) === this.T);
+    });
     this.redraw();
   }
 
@@ -81,6 +93,9 @@ export class FermiDiracViz {
     window.Plotly.react(this.els.plot, traces, this.els.plot.layout, { displayModeBar: false, responsive: true });
 
     this.els.tLabel.textContent = `${this.T} K`;
+    document.querySelectorAll('[data-fd-t]').forEach((b) => {
+      b.classList.toggle('is-on', Number(b.dataset.fdT) === this.T);
+    });
     renderKatex(
       this.els.eq,
       this.T <= 0.05
