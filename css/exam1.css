@@ -151,8 +151,46 @@
 .ex-st.partial { color: #fde68a; }
 .ex-st.missing { color: #fda4af; }
 
+.ex-write {
+  display: block;
+  width: 100%;
+  margin-top: 0.85rem;
+  min-height: 10rem;
+  resize: vertical;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.55);
+  color: #e2e8f0;
+  padding: 0.75rem 0.85rem;
+  font: inherit;
+  line-height: 1.5;
+}
+
+.ex-write:focus {
+  outline: 2px solid rgba(56, 189, 248, 0.35);
+}
+
+.ex-count {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.ex-hit, .ex-miss, .ex-trap {
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+}
+
+.ex-hit { color: #bbf7d0; }
+.ex-miss { color: #fde68a; }
+.ex-trap { color: #fecdd3; }
+
+.ex-part { box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.28); }
+
 @media (max-width: 639px) {
   .ex-exam-bar { align-items: stretch; }
   .ex-side { max-height: 220px; }
   input[type="range"] { min-height: 2rem; }
+  .ex-write { min-height: 8rem; }
 }

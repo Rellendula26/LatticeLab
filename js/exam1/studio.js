@@ -3,8 +3,10 @@ import { SHEET, SHEET_ORDER, CHAINS, sheetEq } from './sheet.js';
 import { TRAPS } from './traps.js';
 import { BANK, CATS, questionById, bankByCat, rubricCat } from './bank.js';
 import { EXAM_DEFS, questionsForExam, generateExam, scoreExam, grade } from './exams.js';
-import { loadAdapt, recordResult, markSeen, weakCats } from './adapt.js';
+import { loadAdapt, recordResult, markSeen, weakCats, recordWritten, writtenStats, recurringTraps } from './adapt.js';
 import { DRAW_TASKS, gradeDraw } from './draw.js';
+import { gradeWritten, isWritten } from './written-grade.js';
+import { WRITTEN } from './written.js';
 
 const RUBRIC_LABEL = {
   crystal: 'Crystal structures & Miller indices',
@@ -73,6 +75,7 @@ export function boot() {
   if (mode === 'mastery') return renderMastery(q);
   if (mode === 'draw') return renderDraw();
   if (mode === 'chains') return renderChains();
+  if (mode === 'written') return renderWritten(q);
   if (mode === 'audit') return renderAudit();
   return renderHub();
 }
@@ -100,6 +103,7 @@ function renderHub() {
       ${card('Concept mastery', '5–10 questions, one relationship, several representations.', 'mastery', 'Drill a concept')}
       ${card('Relationship chains', 'Change the first quantity. Predict the rest.', 'chains', 'Walk a chain')}
       ${card('Drawing practice', 'Grade features, not pixels.', 'draw', 'Sketch')}
+      ${card('Written explanations', 'Explain why. Partial credit on concepts, not wording.', 'written', 'Write')}
       ${card('Coverage audit', 'HW1, HW2, and the sheet, each with Learn / Visualize / Practice.', 'audit', 'Open audit')}
     </div>
     ${weak.length ? `<p class="mt-5 text-sm text-amber-200">Adaptive note: you are shaky on ${weak.map((c) => RUBRIC_LABEL[c] || c).join(', ')}. Mastery and Generate New Exam will lean that way.</p>` : ''}
@@ -120,7 +124,7 @@ function renderExam(q) {
   if (!which) {
     mount().innerHTML = `
       <h2 class="text-2xl font-bold text-white">Exam 1 Practice Exams</h2>
-      <p class="mt-2 text-sm text-slate-400">No hints in exam mode. Flag anything you want to revisit. The sheet button is the real sheet, not an answer key.</p>
+      <p class="mt-2 text-sm text-slate-400">No hints in exam mode. About a third of each paper is written: explain why, not pick a letter. Flag anything you want to revisit. The sheet button is the real sheet, not an answer key.</p>
       <div class="mt-5 grid gap-4 md:grid-cols-2">
         ${[1, 2, 3].map((n) => {
           const d = EXAM_DEFS[n];
@@ -133,7 +137,7 @@ function renderExam(q) {
         }).join('')}
         <article class="glass-card rounded-2xl p-5">
           <h3 class="text-lg font-semibold text-white">Generate New Exam</h3>
-          <p class="mt-2 text-sm text-slate-400">Same scope, different draw. Weak categories from local practice get extra weight next time you drill mastery.</p>
+          <p class="mt-2 text-sm text-slate-400">Same scope, different draw. About a third is written. Weak categories and recurring written misconceptions get extra weight.</p>
           <button type="button" id="ex-gen" class="launch-btn mt-4 rounded-xl px-4 py-2.5 text-sm font-semibold text-white">Generate</button>
         </article>
       </div>`;
@@ -230,7 +234,10 @@ function paintExam(sit) {
 function finishExam(sit) {
   const questions = sit.questions.map(questionById).filter(Boolean);
   const score = scoreExam(questions, sit.answers);
-  questions.forEach((q) => recordResult(rubricCat(q.cat), grade(q, sit.answers[q.id])));
+  questions.forEach((q) => {
+    if (isWritten(q)) recordWritten(rubricCat(q.cat), gradeWritten(q, sit.answers[q.id]));
+    else recordResult(rubricCat(q.cat), grade(q, sit.answers[q.id]));
+  });
   sit.done = true;
   sit.score = score;
   saveSit(sit);
@@ -247,10 +254,13 @@ function renderReview(q) {
   const questions = sit.questions.map(questionById).filter(Boolean);
   const s = sit.score;
   const rub = Object.entries(s.byRubric).map(([k, v]) =>
-    `<li>${RUBRIC_LABEL[k] || k}: ${v.right}/${v.total}</li>`).join('');
+    `<li>${RUBRIC_LABEL[k] || k}: ${v.right}/${v.total}${v.max ? ` · ${Math.round(10 * v.earned) / 10}/${v.max} pts` : ''}</li>`).join('');
   const diags = s.diagnoses.map((d) => `<li>${d}</li>`).join('');
+  const wstats = writtenStats(loadAdapt()).map((row) =>
+    `<li><button type="button" class="ex-nav" data-wc="${row.cat}">${RUBRIC_LABEL[row.cat] || row.cat} · ${row.pct}%</button></li>`).join('');
+  const traps = recurringTraps(loadAdapt()).map((t) => `<li>Recurring misconception: ${t.label}</li>`).join('');
   mount().innerHTML = `
-    <h2 class="text-2xl font-bold text-white">Results · ${s.right}/${s.total} (${s.pct}%)</h2>
+    <h2 class="text-2xl font-bold text-white">Results · ${s.earned ?? s.right}/${s.max ?? s.total} pts (${s.pct}%) · ${s.right}/${s.total} items clear</h2>
     <div class="mt-4 grid gap-4 lg:grid-cols-2">
       <div class="glass rounded-2xl p-4">
         <p class="text-xs uppercase tracking-[0.16em] text-slate-500">Conceptual breakdown</p>
@@ -259,13 +269,17 @@ function renderReview(q) {
       <div class="glass rounded-2xl p-4">
         <p class="text-xs uppercase tracking-[0.16em] text-slate-500">Why errors happened</p>
         <ul class="mt-2 space-y-2 text-sm text-amber-100">${diags || '<li>No repeating diagnosis. Read each review card anyway.</li>'}</ul>
+        ${wstats ? `<p class="ex-h">Written by concept</p><ul class="mt-1 space-y-1">${wstats}</ul>` : ''}
+        ${traps ? `<p class="ex-h">Recurring misconceptions</p><ul class="mt-1 space-y-1 text-sm text-rose-200">${traps}</ul>` : ''}
       </div>
     </div>
     <div class="mt-6 space-y-4">${questions.map((qq) => reviewCard(qq, sit.answers[qq.id])).join('')}</div>`;
+  mount().querySelectorAll('[data-wc]').forEach((b) => b.addEventListener('click', () => go(`mode=written&concept=${b.dataset.wc}`)));
   afterTex();
 }
 
 function reviewCard(q, ans) {
+  if (isWritten(q)) return writtenCard(q, ans, gradeWritten(q, ans));
   const ok = grade(q, ans);
   const yours = formatAns(q, ans);
   const right = formatAns(q, q.correct);
@@ -285,7 +299,31 @@ function reviewCard(q, ans) {
   </article>`;
 }
 
+function writtenCard(q, ans, ev) {
+  const hit = ev.hit.map((c) => `<li>${c.label}</li>`).join('');
+  const miss = ev.miss.map((c) => `<li>${c.missing}</li>`).join('');
+  const traps = ev.traps.map((t) => `<li>${t.label}</li>`).join('');
+  const improve = ev.improve.map((line) => `<li>${line}</li>`).join('');
+  const cls = ev.passed ? 'ex-ok' : ev.earned ? 'ex-part' : 'ex-bad';
+  return `<article class="glass rounded-2xl p-5 ${cls}">
+    <p class="text-[11px] uppercase tracking-[0.16em] ${ev.passed ? 'text-emerald-300' : 'text-amber-200'}">Score ${ev.earned}/${ev.max} · ${q.hw || q.cat}</p>
+    <p class="mt-2 text-sm text-slate-200">${q.prompt}</p>
+    <p class="mt-3 text-sm text-slate-400">Your answer.</p>
+    <p class="mt-1 text-sm text-slate-200 whitespace-pre-wrap">${escHtml(ans) || '<em>blank</em>'}</p>
+    ${hit ? `<p class="ex-h">Correct</p><ul class="ex-hit">${hit}</ul>` : ''}
+    ${miss ? `<p class="ex-h">Missing</p><ul class="ex-miss">${miss}</ul>` : ''}
+    ${traps ? `<p class="ex-h">Potential misconception</p><ul class="ex-trap">${traps}</ul>` : ''}
+    <p class="ex-h">Strong answer</p>
+    <p class="text-sm text-slate-200">${q.model}</p>
+    ${improve ? `<p class="ex-h">How to improve your answer</p><ul class="ex-miss">${improve}</ul>` : ''}
+    <p class="mt-3 text-xs text-sky-200">Equation. <span class="eq" data-tex="${esc(q.equation)}"></span></p>
+    <p class="mt-1 text-xs text-slate-500">Related HW. ${q.hw || ''}</p>
+    <p class="mt-3"><a class="launch-btn inline-flex rounded-xl px-3 py-2 text-xs font-semibold text-white" href="${q.module || 'exam1.html?mode=written'}">Practice this concept</a></p>
+  </article>`;
+}
+
 function formatAns(q, ans) {
+  if (isWritten(q)) return String(ans || '');
   if (ans == null || ans === '') return '';
   if (Array.isArray(ans) || q.type === 'ms' || q.type === 'rank' || q.type === 'chain') {
     const arr = Array.isArray(ans) ? ans : String(ans).split(',');
@@ -299,6 +337,14 @@ function formatAns(q, ans) {
 }
 
 function renderPrompt(q, current, reveal) {
+  if (isWritten(q)) {
+    const text = typeof current === 'string' ? current : '';
+    return `<p class="text-[11px] uppercase tracking-[0.16em] text-slate-500">${q.cat} · written · L${q.level || '?'}</p>
+      <p class="mt-2 text-base text-slate-100">${q.prompt}</p>
+      <textarea class="ex-write" data-write rows="8" maxlength="4000" placeholder="Explain the mechanism. Different wording is fine.">${escHtml(text)}</textarea>
+      <p class="ex-count"><span data-cc>${text.length}</span> characters</p>
+      ${reveal ? writtenCard(q, text, gradeWritten(q, text)) : ''}`;
+  }
   const body = (() => {
     if (q.type === 'ms') {
       return (q.choices || []).map((c) =>
@@ -329,6 +375,16 @@ function has(current, id) {
 }
 
 function bindPrompt(q, onChange, current) {
+  if (isWritten(q)) {
+    const ta = mount().querySelector('[data-write]');
+    if (!ta) return;
+    const cc = mount().querySelector('[data-cc]');
+    ta.addEventListener('input', () => {
+      if (cc) cc.textContent = String(ta.value.length);
+      onChange(ta.value);
+    });
+    return;
+  }
   const box = mount().querySelector('[data-choices]');
   if (!box) return;
   if (q.type === 'ms') {
@@ -466,7 +522,7 @@ function renderMastery(q) {
   const meta = CONCEPTS.find((c) => c.id === concept) || CONCEPTS[0];
   const weak = weakCats(loadAdapt());
   const pool = BANK.filter((qq) => meta.cats.includes(qq.cat));
-  const types = ['tf', 'mc', 'predict', 'scenario', 'chain', 'calc'];
+  const types = ['written-response', 'tf', 'mc', 'predict', 'scenario', 'chain', 'calc'];
   const picked = [];
   types.forEach((ty) => {
     const hit = pool.find((qq) => qq.type === ty && !picked.includes(qq));
@@ -492,11 +548,11 @@ function renderMastery(q) {
         <button type="button" id="ms-check" class="launch-btn rounded-xl px-4 py-2 text-sm font-semibold text-white">Check</button>
         <button type="button" id="ms-next" class="ex-chip">Next</button>
       </div>
-      <div id="ms-rev" class="hidden mt-4">${reviewCard(qq, answers[qq.id])}</div>`;
+      <div id="ms-rev" class="hidden mt-4"></div>`;
     bindPrompt(qq, (val) => { answers[qq.id] = val; }, answers[qq.id]);
     document.getElementById('ms-check').addEventListener('click', () => {
-      const ok = grade(qq, answers[qq.id]);
-      recordResult(rubricCat(qq.cat), ok);
+      if (isWritten(qq)) recordWritten(rubricCat(qq.cat), gradeWritten(qq, answers[qq.id]));
+      else recordResult(rubricCat(qq.cat), grade(qq, answers[qq.id]));
       const box = document.getElementById('ms-rev');
       box.classList.remove('hidden');
       box.innerHTML = reviewCard(qq, answers[qq.id]);
@@ -665,6 +721,110 @@ function renderChains() {
   paint();
 }
 
+function renderWritten(q) {
+  const concept = q.get('concept') || '';
+  const adapt = loadAdapt();
+  const stats = writtenStats(adapt);
+  const traps = recurringTraps(adapt);
+  if (!concept) {
+    mount().innerHTML = `
+      <h2 class="text-2xl font-bold text-white">Written explanations</h2>
+      <p class="mt-2 text-sm text-slate-400">Explain the mechanism. Credit is for ideas, not for matching a sentence. Practice exams hide this feedback until you submit the paper.</p>
+      ${traps.length ? `<div class="glass rounded-2xl p-4 mt-4"><p class="text-xs uppercase tracking-[0.16em] text-rose-300">Recurring misconceptions</p><ul class="mt-2 space-y-1 text-sm text-rose-100">${traps.map((t) => `<li>${t.label} (${t.n}×)</li>`).join('')}</ul></div>` : ''}
+      <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        ${CONCEPTS.map((c) => {
+          const row = stats.find((s) => s.cat === rubricCat(c.cats[0]) || s.cat === c.id);
+          const n = WRITTEN.filter((qq) => c.cats.includes(qq.cat)).length;
+          return `<button type="button" class="glass-card rounded-2xl p-4 text-left" data-c="${c.id}">
+            <h3 class="font-semibold text-white">${c.title}</h3>
+            <p class="mt-1 text-xs text-slate-500">${n} written prompts${row ? ` · ${row.pct}% so far` : ''}</p>
+          </button>`;
+        }).join('')}
+      </div>`;
+    mount().querySelectorAll('[data-c]').forEach((b) => b.addEventListener('click', () => go(`mode=written&concept=${b.dataset.c}`)));
+    return;
+  }
+  const meta = CONCEPTS.find((c) => c.id === concept) || CONCEPTS[0];
+  const pool = WRITTEN.filter((qq) => meta.cats.includes(qq.cat));
+  const weak = weakCats(adapt);
+  const ordered = [...pool].sort((a, b) => {
+    const aw = weak.includes(rubricCat(a.cat)) ? 0 : 1;
+    const bw = weak.includes(rubricCat(b.cat)) ? 0 : 1;
+    return aw - bw || (b.level || 0) - (a.level || 0);
+  });
+  const startId = q.get('qid') || '';
+  let i = Math.max(0, ordered.findIndex((qq) => qq.id === startId));
+  if (startId && i < 0) i = 0;
+  let draft = '';
+  let graded = null;
+  const paint = () => {
+    const qq = ordered[i];
+    if (!qq) {
+      mount().innerHTML = `<p class="text-slate-400">No written prompts in this cluster yet.</p>`;
+      return;
+    }
+    markSeen(qq.id);
+    mount().innerHTML = `
+      <p class="text-xs text-slate-500">${meta.title} · ${i + 1}/${ordered.length} · L${qq.level}</p>
+      <article class="glass rounded-2xl p-5 mt-3">${renderPrompt(qq, draft, false)}</article>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button type="button" id="wr-go" class="launch-btn rounded-xl px-4 py-2 text-sm font-semibold text-white">Submit response</button>
+        <button type="button" id="wr-again" class="ex-chip ${graded ? '' : 'hidden'}">Try again</button>
+        <button type="button" id="wr-next" class="ex-chip">Next prompt</button>
+      </div>
+      <div id="wr-out" class="mt-4 ${graded ? '' : 'hidden'}">${graded ? writtenCard(qq, draft, graded) : ''}</div>
+      <div id="wr-fu" class="mt-4"></div>`;
+    bindPrompt(qq, (val) => { draft = val; }, draft);
+    document.getElementById('wr-go').addEventListener('click', () => {
+      graded = gradeWritten(qq, draft);
+      recordWritten(rubricCat(qq.cat), graded);
+      const box = document.getElementById('wr-out');
+      box.classList.remove('hidden');
+      box.innerHTML = writtenCard(qq, draft, graded);
+      document.getElementById('wr-again').classList.remove('hidden');
+      paintFollowup(qq, graded);
+      afterTex();
+    });
+    document.getElementById('wr-again').addEventListener('click', () => {
+      draft = '';
+      graded = null;
+      paint();
+    });
+    document.getElementById('wr-next').addEventListener('click', () => {
+      i = Math.min(ordered.length - 1, i + 1);
+      draft = '';
+      graded = null;
+      paint();
+    });
+  };
+  paint();
+}
+
+function paintFollowup(q, ev) {
+  const host = document.getElementById('wr-fu');
+  if (!host || !ev.followup) return;
+  const fu = ev.followup;
+  let text = '';
+  host.innerHTML = `
+    <article class="glass rounded-2xl p-5">
+      <p class="text-[11px] uppercase tracking-[0.16em] text-amber-200/80">Follow-up · you missed a link</p>
+      <p class="mt-2 text-sm text-slate-100">${fu.prompt}</p>
+      <textarea class="ex-write" data-fu rows="5" maxlength="2000" placeholder="Hit the missing concept, not a restatement of what you already wrote."></textarea>
+      <button type="button" id="fu-go" class="launch-btn mt-3 rounded-xl px-4 py-2 text-sm font-semibold text-white">Submit follow-up</button>
+      <div id="fu-out" class="hidden mt-3"></div>
+    </article>`;
+  const ta = host.querySelector('[data-fu]');
+  ta.addEventListener('input', () => { text = ta.value; });
+  document.getElementById('fu-go').addEventListener('click', () => {
+    const fake = { rubric: fu.rubric, model: fu.model || 'Name the missing physical link in one causal sentence.', hw: q.hw, module: q.module, equation: q.equation, prompt: fu.prompt };
+    const gev = gradeWritten(fake, text);
+    recordWritten(rubricCat(q.cat), gev);
+    const out = document.getElementById('fu-out');
+    out.classList.remove('hidden');
+    out.innerHTML = writtenCard(fake, text, gev);
+  });
+}
+
 function renderAudit() {
   const tally = coverageByStatus();
   mount().innerHTML = `
@@ -694,6 +854,10 @@ function afterTex() {
 
 function esc(s) {
   return String(s || '').replace(/"/g, '&quot;');
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
 
 window.addEventListener('popstate', boot);
