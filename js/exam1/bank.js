@@ -3,6 +3,8 @@
  * Every item has a verified answer and a diagnosis tag.
  */
 
+import { WRITTEN } from './written.js';
+
 export const CATS = [
   { id: 'crystal', label: 'Crystal structures & Miller indices' },
   { id: 'miller', label: 'Crystal structures & Miller indices' },
@@ -35,7 +37,7 @@ export const DIAG = {
 
 const Q = (row) => row;
 
-export const BANK = [
+const OBJECTIVE = [
   Q({
     id: 'c-sc-n', cat: 'crystal', type: 'mc',
     prompt: 'A simple-cubic conventional cell has an atom at every corner and nowhere else. How many atoms does this cell own?',
@@ -845,6 +847,8 @@ export const BANK = [
     hw: 'HW2 Q2', module: 'latticelab_homeworks.html?hw=hw2&q=q2bi', diagnosis: DIAG.ionize,
   }),
 ];
+
+export const BANK = [...OBJECTIVE, ...WRITTEN];
 
 export function questionById(id) {
   return BANK.find((q) => q.id === id);
